@@ -27,16 +27,21 @@ export class ChatUserbox extends Draggable{
 
         //container for user details
         const userDetails = elementBuilder("div", {className:"chatbox-userdetails flex  flex-column"}, body);
-        this.usernameText = elementBuilder("p", {}, userDetails);
+        this.usernameText = elementBuilder("p", {className:"text-outline pointer"}, userDetails);
+        this.usernameText.addEventListener("click", ()=>{
+            window.open(`${window.location.origin}/${this.userData?.user?.username}`)
+        })
+        this.followerCount = elementBuilder("p", {className:"text-outline"}, userDetails);
 
         //badges container
         const badgesContainer = elementBuilder("div", {className:"chatbox-badges flex"}, container);
 
         //interactions container
         const interactionsContainer = elementBuilder("div", {className:"chatbox-interactions flex"}, container);
+
+        //follow/unfollow
         this.followButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, interactionsContainer);
         this.followButton.addEventListener("click", ()=>{
-            //follow/unfollow
             if(this.userData?.id) {
                 const innerText = this.followButton.innerText
                 if(innerText.includes("Follow")){
@@ -57,7 +62,20 @@ export class ChatUserbox extends Draggable{
                 
             }
         })
-        
+        //preview
+        const previewContainer = elementBuilder("div", {className:"hidden chatbox-previewWrap"}, container);
+        const preview = elementBuilder("iframe", {className:"chatbox-preview"}, previewContainer);
+        const previewButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"Preview"}, interactionsContainer);
+        previewButton.addEventListener("click", ()=>{
+            if(previewButton.innerText == "Preview"){
+                preview.src = `${window.location.origin}/${this.userData?.user?.username}`
+                previewContainer.classList.remove("hidden");
+                previewButton.innerText = "Hide Preview";
+            }else{
+                previewContainer.classList.add("hidden");
+                previewButton.innerText = "Preview";
+            }
+        })
 
 
         document.body.appendChild(this.element);
@@ -78,12 +96,13 @@ export class ChatUserbox extends Draggable{
             if(userData?.banner_image?.url){
                 this.element.style.setProperty('--chatbox-image', `url('${userData.banner_image.url}')`);
             }
-            
+            this.followerCount.innerText = (userData?.followersCount ?? "0") + " followers"
             this.dragElement(this.header, this.element);
             this.followButton.innerText = userData.following ? "Unfollow" : "Follow";
         }else{
             //only on init
             this.followButton.innerText = "...";
+            this.followerCount.innerText = ""
             this.element.style.setProperty('--chatbox-image', `url('')`);
 
             //position
@@ -91,7 +110,8 @@ export class ChatUserbox extends Draggable{
             this.element.style.top = rect.top + "px";
             this.element.style.left = rect.left + "px";
             //size
-            this.element.style.width = rect.width + "px";
+            //this.element.style.width = rect.width + "px";
+            this.element.style.setProperty('--width',  rect.width);
         }
         
         this.element.classList.remove("hidden");
