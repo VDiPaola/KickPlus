@@ -68,10 +68,13 @@ export class ChatUserbox extends Draggable{
         const previewButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"Preview"}, interactionsContainer);
         previewButton.addEventListener("click", ()=>{
             if(previewButton.innerText == "Preview"){
+                this.prevWidth = this.element.style.getPropertyValue('--width');
+                this.element.style.setProperty('--width',  this.prevWidth * 2);
                 preview.src = `${window.location.origin}/${this.userData?.user?.username}`
                 previewContainer.classList.remove("hidden");
                 previewButton.innerText = "Hide Preview";
             }else{
+                this.element.style.setProperty('--width',  this.prevWidth);
                 previewContainer.classList.add("hidden");
                 previewButton.innerText = "Preview";
             }

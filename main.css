@@ -146,9 +146,9 @@
 }
 .chatbox-preview{
   width: 1000px;
-  height: 1080px;
+  height: 680px;
   border: 0;
-  transform: scale(calc(var(--width)/1000), 0.27);
+  transform: scale(calc(var(--width)/1000), 0.45);
   transform-origin: 0 0;
 }
 .chatbox-header{

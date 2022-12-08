@@ -67,7 +67,7 @@ export class NetworkManager{
 //   "headers": {
 //     "accept": "application/json, text/plain, */*",
 //     "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6",
-//     "authorization": "Bearer eyJpdiI6InNaQzlzVVJreUxIbU01OTdsSG0xeUE9PSIsInZhbHVlIjoiN2tHc0pDdVA0b3FkR0VVS2hEelBybE5KbXFDMlpXbk1lWkFiTDMvQ2NmRnB2eFQrdlNXNWRYOVVmYmNZUnduaVlOdkU4eWNxellSQUhvQU9TRW5rd1M4L1BiZEx6ZFVHVzV1VXBMeUtpQzh4WXljME5OUTZYQlpOSkd3M2JZRHciLCJtYWMiOiI3Nzk5YTBmNDk4YTVmODlmYjMwN2ZjNjE4NzdjY2FmMTRjNGFkYzM5ODFiZDE3MTQ1ZjQwZDM4ZDEzMjYzNDQ1IiwidGFnIjoiIn0=",
+//     "authorization": "Bearer =",
 //     "cache-control": "no-cache",
 //     "content-type": "application/json",
 //     "pragma": "no-cache",
@@ -78,7 +78,7 @@ export class NetworkManager{
 //     "sec-fetch-mode": "cors",
 //     "sec-fetch-site": "same-origin",
 //     "x-socket-id": "16303.48819",
-//     "x-xsrf-token": "eyJpdiI6InNaQzlzVVJreUxIbU01OTdsSG0xeUE9PSIsInZhbHVlIjoiN2tHc0pDdVA0b3FkR0VVS2hEelBybE5KbXFDMlpXbk1lWkFiTDMvQ2NmRnB2eFQrdlNXNWRYOVVmYmNZUnduaVlOdkU4eWNxellSQUhvQU9TRW5rd1M4L1BiZEx6ZFVHVzV1VXBMeUtpQzh4WXljME5OUTZYQlpOSkd3M2JZRHciLCJtYWMiOiI3Nzk5YTBmNDk4YTVmODlmYjMwN2ZjNjE4NzdjY2FmMTRjNGFkYzM5ODFiZDE3MTQ1ZjQwZDM4ZDEzMjYzNDQ1IiwidGFnIjoiIn0="
+//     "x-xsrf-token": "="
 //   },
 //   "referrer": "https://kick.com/trainwreckstv/chatroom",
 //   "referrerPolicy": "strict-origin-when-cross-origin",
@@ -87,3 +87,9 @@ export class NetworkManager{
 //   "mode": "cors",
 //   "credentials": "include"
 // });
+
+
+
+
+// "api/v1/channels/{channel}/unmute-user"
+// "api/v1/channels/{channel}/mute-user"
