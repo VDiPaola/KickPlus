@@ -1,12 +1,12 @@
-import { CacheManager } from "./CacheManager";
+import { Token } from "../content-scripts/classes/Helpers";
 
 const API = window.location.origin + "/api/v1/"
 
 export class NetworkManager{
     //basic get
-    static GET(url){
+    static REQUEST(endpoint, option={}){
         return new Promise((resolve,reject)=>{
-            fetch(url)
+            fetch(API + endpoint, option)
             .then(res => res.json())
             .then(res => resolve(res))
             .catch(err => reject(err));
@@ -15,28 +15,30 @@ export class NetworkManager{
 
     //gets id of user by the given username
     static getUserId = (username) => {
-        CacheManager.get
-        return this.GET(`${API}channels/${username}`);
+        return this.REQUEST(`channels/${username}`);
     }
 
     //gets the id of current logged in user
     static getCurrentUserId = ()  => {
-        return this.GET(API+"user");
+        return this.REQUEST("user");
     }
 
-    static followUser(channel_id, token){
-        fetch(API + "channels/user/subscribe", {
-            "credentials": "include",
-            "headers": {
-                "Accept": "application/json, text/plain, */*",
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token,
-                "X-XSRF-TOKEN": token,
-            },
-            "body": "{\"channel_id\":"+channel_id+"}",
-            "method": "POST",
-            "mode": "cors"
-        });
+    static followUser(channel_id){
+        Token.get().then(token => (
+             this.REQUEST("channels/user/subscribe", {
+                "credentials": "include",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                    "X-XSRF-TOKEN": token,
+                },
+                "body": "{\"channel_id\":"+channel_id+"}",
+                "method": "POST",
+                "mode": "cors"
+            })
+        ))
+        .catch(()=>(null))
     }
 }
 

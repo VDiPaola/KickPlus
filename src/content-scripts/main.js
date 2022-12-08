@@ -1,8 +1,7 @@
-import { waitForElement, onElementObserved, DEFAULT_PFP } from "./classes/Helpers";
-import { GlobalSetting } from "../classes-shared/Settings";
+import { waitForElement, onElementObserved } from "./classes/Helpers";
+import {DEFAULT_PFP} from "./classes/assets"
 import { ChatUserbox } from "./Elements/ChatUserBox";
 import { NetworkManager } from "../classes-shared/networkManager";
-
 
 window.addEventListener("load", async () => {
     //INIT custom elements
@@ -11,9 +10,10 @@ window.addEventListener("load", async () => {
     const user = await NetworkManager.getCurrentUserId();
     //make sure they are logged in
     if (user.username) {
+        //set name next to pfp
         waitForElement(".main-navbar .profile-picture")
         .then(el => {
-            //REDO THIS
+            //REFACTOR
             const span = document.createElement("span");
             span.innerHTML = user.username;
             span.className = "username";
