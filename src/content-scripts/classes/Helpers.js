@@ -89,13 +89,12 @@ export class Token{
                 this.#isListening = true;
                 const listener = 
                     (data, sender, sendResponse) => {
-                        console.log(data)
                         if(data?.type === "token" && data?.message){
-                            TOKEN = data.message;
+                            const token = decodeURIComponent(data.message ?? "");
                             chrome.runtime.onMessage.removeListener(listener);
                             this.#isListening = false;
-                            this.#token = TOKEN;
-                            resolve(TOKEN);
+                            this.#token = token;
+                            resolve(token);
                         }
                         return true;
                     }

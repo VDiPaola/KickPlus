@@ -35,7 +35,7 @@ window.addEventListener("load", async () => {
                     usernameEl.classList.add("chat-username");
                     usernameEl.addEventListener("click", (e)=>{
                         //get user data
-                        userChatBox.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer);
+                        userChatBox.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
                         NetworkManager.getUserId(usernameEl.innerHTML)
                         .then(userData => {
                             if(userData && userData.user){

@@ -40,4 +40,10 @@ export class Draggable{
     document.onmousemove = null;
   }
 }
+
+  StopDragElement(el){
+    document.onmouseup = null;
+    document.onmousemove = null;
+    el.onmousedown = null;
+  }
 }

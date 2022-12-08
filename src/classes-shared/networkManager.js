@@ -24,8 +24,25 @@ export class NetworkManager{
     }
 
     static followUser(channel_id){
-        Token.get().then(token => (
+        return Token.get().then(token => (
              this.REQUEST("channels/user/subscribe", {
+                "credentials": "include",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                    "X-XSRF-TOKEN": token,
+                },
+                "body": "{\"channel_id\":"+channel_id+"}",
+                "method": "POST",
+                "mode": "cors"
+            })
+        ))
+        .catch(()=>(null))
+    }
+    static unFollowUser(channel_id){
+        return Token.get().then(token => (
+             this.REQUEST("channels/user/unsubscribe", {
                 "credentials": "include",
                 "headers": {
                     "Accept": "application/json, text/plain, */*",
