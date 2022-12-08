@@ -128,14 +128,13 @@
   position: fixed;
   z-index: 99;
   border-radius: 5px;
+  background-size: cover;
+  background-repeat: no-repeat;
   height: var(--height);
 }
 
 .chatbox-header{
   cursor: move;
-}
-.chatbox-body{
-
 }
 .chatbox-pfpContainer{
   padding: 0px 15px;

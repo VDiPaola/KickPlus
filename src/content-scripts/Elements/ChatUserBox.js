@@ -9,6 +9,7 @@ export class ChatUserbox extends Draggable{
     constructor(){
         super()
         this.element = elementBuilder("div", {className:"chatbox-element hidden no-select"});
+        this.element.style.backgroundImage = `url('${DEFAULT_BANNER_IMAGE}')`
         const container = elementBuilder("div", {className:"chatbox-container flex flex-column"}, this.element);
         //heading with exit cross
         this.header = elementBuilder("div", {className:"chatbox-header flex w-full justify-right"},container);
@@ -72,14 +73,19 @@ export class ChatUserbox extends Draggable{
         //set data
         this.pfp.src = userData.user?.profile_pic || DEFAULT_PFP;
         this.usernameText.innerText = userData?.user?.username || DEFAULT_BANNER_IMAGE;
-        this.element.style.setProperty('--chatbox-image', `url('${userData?.banner_image?.url || DEFAULT_BANNER_IMAGE}')`);
+        
         if(!init){
+            if(userData?.banner_image?.url){
+                this.element.style.setProperty('--chatbox-image', `url('${userData.banner_image.url}')`);
+            }
+            
             this.dragElement(this.header, this.element);
             this.followButton.innerText = userData.following ? "Unfollow" : "Follow";
         }else{
             //only on init
             this.StopDragElement(this.header);
             this.followButton.innerText = "...";
+            this.element.style.setProperty('--chatbox-image', `url('')`);
 
             //position
             let rect = msgElement.getBoundingClientRect();
