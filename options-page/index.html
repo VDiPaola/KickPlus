@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="../bootstrap.js"></script>
+    <title>Options</title>
+    <style>
+    .hide{
+        display: none;
+    }
+
+    .form-check{
+        text-align: start;
+    }
+    .dropdown-item{
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body class="text-center">
+    <!-- LOGIN -->
+    <div class="hide container" id="login">
+        <h1>Sign In</h1>
+        <div class="row">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password-login" name="password" placeholder="Enter password">
+            </div>
+            <div class="alert alert-danger hide alert-dismissible fade" role="alert" id="password-alert">
+                Incorrect Password, for help contact cn-cambridge@googlegroups.com
+                <span type="button" class="close" data-dismiss="alert" aria-label="Close" id="password-alert-close"><span aria-hidden="true">&times;</span></span>
+            </div>
+            <div><button type="button" class="btn btn-primary mt-2" id="login-button">Login</button></div>
+        </div>
+    </div>
+    <!-- SIGN UP -->
+    <div class="hide container" id="sign-up">
+        <h1>Sign Up</h1>
+        <div class="row">
+            <div clas="row">create an admin password to access the global settings</div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input required type="password" class="form-control" id="password-signup" name="password" placeholder="Enter password">
+            </div>
+            <div>
+            <button type="button" class="btn btn-primary" id="signup-button">Sign Up</button></div>
+        </div>
+    </div>
+
+
+    <!-- OPTIONS -->
+    <div class="container text-center hide" id="options">
+        <h1>Options</h1>
+        <div class="row justify-content-center">
+            <!-- ACCOUNT -->
+            <div class="col-6">
+                <div class="form-group row">
+                    <label for="newPassword">Change Password</label>
+                    <input type="password" class="form-control col" id="options-password-input" name="password" placeholder="Enter new password">
+                    <button type="button" class="btn btn-primary col-3" id="options-password-button">Save</button>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row mt-4 justify-content-center hide">
+            <!-- INTELLISENSE -->
+            <h4>Intellisense</h4>
+            <div class="row align-items-center justify-content-center">
+                <div class="form-check justify-content-center col">
+                    <input class="form-check-input" type="checkbox" value="" id="options-intellisense-caseSensitive">
+                    <label class="form-check-label" for="options-intellisense-caseSensitive">Case-Sensitive</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 justify-content-center">
+            <!-- SCENE -->
+            <h4>Scene</h4>
+            <div class="row align-items-center justify-content-center">
+                <div class="form-check justify-content-center col-2">
+                    <input class="form-check-input" type="checkbox" value="" id="options-scene-autoSaveEnabled">
+                    <label class="form-check-label" for="options-scene-autoSaveEnabled">Auto Save Enabled</label>
+                </div>
+            </div>
+            <!-- auto save -->
+            <div class="dropdown col-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="options-autosave-dropdown-button" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="options-autosave-dropdown" id="options-autosave-dropdown">
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="1">1 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="5">5 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="10">10 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="15">15 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="20">20 Minutes</a></li>
+                </ul>
+              </div>
+        </div>
+
+        <div class="row mt-3" id="options-intellisense-belts-enabled">
+            <h4 class="text-center">Intellisense</h4>
+            <h6 class="text-start">Enabled for:</h6>
+        </div>
+        
+
+        <!-- LINKS -->
+        <h4 class="mt-4">Embeded Links</h4>
+        <div class="row mt-1" id="options-belt-end-links">
+            <h6 class="text-start">End Of Belt Quiz Links:</h6>
+            
+        </div>
+        <div class="row mt-1" id="options-belt-helper-links">
+            <h6 class="text-start">Prove Yourself S.O.S Links:</h6>
+            
+        </div>
+        
+        <button type="button" class="btn btn-danger col-md-2 col-sm-6 mt-5 hide" id="options-reset-button">Reset All</button>
+    </div>
+
+
+<script src="../dist/options-page/main.js"></script>
+</body>
+</html>

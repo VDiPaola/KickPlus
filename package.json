@@ -1,0 +1,19 @@
+{
+  "name": "kickplus",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "webpack --config ./webpack.config.js",
+    "publish": "powershell compress-archive -Force './options-page','./popup','./dist','./manifest.json','./bootstrap.js','./main.css','./icon.png' KickPlus.zip"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "feather-icons": "^4.29.0"
+  }
+}

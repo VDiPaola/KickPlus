@@ -1,0 +1,103 @@
+:root{
+    --tooltipBG: rgba(32, 32, 32, 0.425);
+}
+  
+
+/* GENERIC SHIT */
+.flex{
+  display: flex;
+}
+.flex-column{
+  flex-direction: column;
+}
+.flex-grow{
+  flex-grow: 1;
+}
+.justify-center{
+  justify-content: center;
+}
+.justify-right{
+  justify-content: right;
+}
+.items-center{
+  align-items: center;
+}
+.w-full{
+  width: 100%;
+}
+.hidden{
+  visibility: hidden;
+}
+.pointer{
+  cursor: pointer;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    background-color: var(--tooltipBG);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 1px 4px;
+    position: fixed;
+    z-index: 90;
+}
+
+.custom-btn:hover{
+  background-color: rgba(173, 173, 173, 0.562);
+}
+
+.custom-btn{
+  width: 100% !important;
+  display: flex !important;
+  border-radius: 5px !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+  
+.profile-picture:hover .tooltiptext {
+  visibility: visible;
+}
+
+
+/* Header */
+.username{
+  text-align: center;
+  padding: 1px 4px;
+}
+
+/* Chat */
+.chat-username{
+  cursor: pointer;
+}
+.chat-username:hover{
+  text-decoration: underline;
+}
+
+
+/* User Chat Box */
+/* const crossSpan = elementBuilder("span", {className:"chatbox-crossSpan"}, header); */
+
+.chatbox-container{
+  position: fixed;
+  z-index: 99;
+  background: rgba(94, 93, 93, 0.432);
+  border-radius: 5px;
+  height: 150px;
+}
+.chatbox-header{
+  cursor: move;
+}
+.chatbox-body{
+
+}
+.chatbox-pfpContainer{
+  padding: 0px 15px;
+}
+.chatbox-userdetails{
+  padding: 5px;
+}
+.chatbox-interactions{
+  justify-content: center;
+  gap: 10%;
+}
