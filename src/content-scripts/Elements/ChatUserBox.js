@@ -83,7 +83,6 @@ export class ChatUserbox extends Draggable{
             this.followButton.innerText = userData.following ? "Unfollow" : "Follow";
         }else{
             //only on init
-            this.StopDragElement(this.header);
             this.followButton.innerText = "...";
             this.element.style.setProperty('--chatbox-image', `url('')`);
 

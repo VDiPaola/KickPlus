@@ -102,12 +102,12 @@
 
   display: block;
   background-image: var(--chatbox-image);
-  background-size: cover;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   width: 100%;
   height: 100%;
 
-  --blur-amount: 1px;
+  --blur-amount: 2px;
   -webkit-filter: blur(var(--blur-amount));
   -moz-filter: blur(var(--blur-amount));
   -o-filter: blur(var(--blur-amount));
@@ -119,7 +119,8 @@
   overflow: auto;
   width: 100%;
   height: 100%;
-  top:calc(var(--height) * -1)
+  top:calc(var(--height) * -1);
+  color:rgb(185, 193, 194);
 }
 .chatbox-element{
   --chatbox-image: "url('')";
