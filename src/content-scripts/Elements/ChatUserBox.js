@@ -6,15 +6,18 @@ const feather = require("feather-icons")
 
 export class ChatUserbox extends Draggable{
     userData;
-    constructor(){
+    constructor(streamerData, isStreamer=false){
         super()
+
+        this.streamerData = streamerData;
+        this.isStreamer = isStreamer;
         this.element = elementBuilder("div", {className:"chatbox-element hidden no-select"});
         this.element.style.backgroundImage = `url('${DEFAULT_BANNER_IMAGE}')`
         const container = elementBuilder("div", {className:"chatbox-container flex flex-column"}, this.element);
         //heading with exit cross
         this.header = elementBuilder("div", {className:"chatbox-header flex w-full justify-right"},container);
         
-        const crossSpan = elementBuilder("span", {className:"chatbox-crossSpan pointer", innerHTML:feather.icons.x.toSvg()}, this.header);
+        const crossSpan = elementBuilder("span", {className:"pointer", innerHTML:feather.icons.x.toSvg()}, this.header);
         crossSpan.addEventListener("click", (e)=>{
             this.hide();
         })
@@ -39,12 +42,16 @@ export class ChatUserbox extends Draggable{
         //interactions container
         const interactionsContainer = elementBuilder("div", {className:"chatbox-interactions flex"}, container);
 
+        //FUNCTIONAL BUTTONS
+        const functionalContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
+
         //follow/unfollow
-        this.followButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, interactionsContainer);
+        this.followButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, functionalContainer);
         this.followButton.addEventListener("click", ()=>{
             if(this.userData?.id) {
                 const innerText = this.followButton.innerText
                 if(innerText.includes("Follow")){
+                    //follow user
                     this.followButton.innerText = "..."
                     NetworkManager.followUser(this.userData.id)
                     .then(()=>{
@@ -52,6 +59,7 @@ export class ChatUserbox extends Draggable{
                     })
                     .catch(()=>{this.followButton.innerText = innerText})
                 }else if(innerText.includes("Unfollow")){
+                    //unfollow user
                     this.followButton.innerText = "..."
                     NetworkManager.unFollowUser(this.userData.id)
                     .then(()=>{
@@ -62,23 +70,53 @@ export class ChatUserbox extends Draggable{
                 
             }
         })
-        //preview
-        const previewContainer = elementBuilder("div", {className:"hidden chatbox-previewWrap"}, container);
-        const preview = elementBuilder("iframe", {className:"chatbox-preview"}, previewContainer);
-        const previewButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"Preview"}, interactionsContainer);
-        previewButton.addEventListener("click", ()=>{
-            if(previewButton.innerText == "Preview"){
-                this.prevWidth = this.element.style.getPropertyValue('--width');
-                this.element.style.setProperty('--width',  this.prevWidth * 2);
-                preview.src = `${window.location.origin}/${this.userData?.user?.username}`
-                previewContainer.classList.remove("hidden");
-                previewButton.innerText = "Hide Preview";
-            }else{
-                this.element.style.setProperty('--width',  this.prevWidth);
-                previewContainer.classList.add("hidden");
-                previewButton.innerText = "Preview";
+        //mod button - only show if in your chat
+        if(isStreamer){
+            this.modButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, functionalContainer);
+            this.modButton.addEventListener("click", ()=>{
+                if(this.userData?.user_id) {
+                    const innerText = this.modButton.innerText
+                    if(innerText.includes("Mod")){
+                        //mod user
+                        this.modButton.innerText = "..."
+                        NetworkManager.modUser(this.userData.user_id)
+                        .then((res)=>{
+                            this.modButton.innerText = "Unmod"
+                            this.streamerData.channel_users.push({id:res.id, user_id:this.userData.user_id})
+                        })
+                        .catch(()=>{this.modButton.innerText = innerText})
+                    }else if(innerText.includes("Unmod")){
+                        //unmod user
+                        this.modButton.innerText = "..."
+                        const id = streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0].id;
+                        NetworkManager.unModUser(id)
+                        .then(()=>{
+                            this.modButton.innerText = "Mod"
+                        })
+                        .catch(()=>{this.modButton.innerText = innerText})
+                    }
+                    
+                }
+            })
+        }
+
+
+
+        //SOCIALS
+        const socialsContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
+        const socialsData = {twitter: "https://twitter.com/",instagram:"https://instagram.com/", facebook:"https://facebook.com/",youtube:"https://youtube.com/"}
+        this.socials = {}
+        for(let social of Object.keys(socialsData)){
+            if(feather.icons?.[social]){
+                const socialButton = elementBuilder("span", {className:"pointer hidden", innerHTML:feather.icons[social].toSvg()}, socialsContainer);
+                socialButton.addEventListener("click", (e)=>{
+                    window.open(socialsData[social] + this.userData?.user?.[social], "_blank");
+                })
+                this.socials[social] = socialButton;
             }
-        })
+            
+        }
+        
 
 
         document.body.appendChild(this.element);
@@ -90,6 +128,7 @@ export class ChatUserbox extends Draggable{
     }
 
     show(userData, msgElement, init=false){
+        console.log(this.socials)
         this.userData = userData;
         //set data
         this.pfp.src = userData.user?.profile_pic || DEFAULT_PFP;
@@ -102,11 +141,32 @@ export class ChatUserbox extends Draggable{
             this.followerCount.innerText = (userData?.followersCount ?? "0") + " followers"
             this.dragElement(this.header, this.element);
             this.followButton.innerText = userData.following ? "Unfollow" : "Follow";
+            //MOD BUTTON
+            if(this.isStreamer && this.streamerData?.channel_users){
+                this.modButton.innerText = "Mod";
+                const channelUser = this.streamerData.channel_users.filter(c => c.user_id == userData.user_id)[0];
+                if(channelUser && channelUser.role == "moderator"){
+                    this.modButton.innerText = "Unmod";
+                }
+            }
+
+            //SOCIAL BUTTONS
+            for(let socialName of Object.keys(this.socials)){
+                if(userData.user?.[socialName]){
+                    this.socials[socialName].classList.remove("hidden")
+                }
+            }
+            
+            
         }else{
-            //only on init
+            //only on init - reset values
+            if(this.isStreamer) this.modButton.innerText = "...";
             this.followButton.innerText = "...";
             this.followerCount.innerText = ""
             this.element.style.setProperty('--chatbox-image', `url('')`);
+            for(let socialName of Object.keys(this.socials)){
+                this.socials[socialName].classList.add("hidden");
+            }
 
             //position
             let rect = msgElement.getBoundingClientRect();

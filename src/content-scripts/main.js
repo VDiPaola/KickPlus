@@ -4,10 +4,9 @@ import { ChatUserbox } from "./Elements/ChatUserBox";
 import { NetworkManager } from "../classes-shared/networkManager";
 
 window.addEventListener("load", async () => {
-    //INIT custom elements
-    const userChatBoxElement = new ChatUserbox();
     //Add name to header
     const user = await NetworkManager.getCurrentUserId();
+    console.log(user)
     //make sure they are logged in
     if (user.username) {
         //set name next to pfp
@@ -26,11 +25,17 @@ window.addEventListener("load", async () => {
     
     //make sure they are in a stream or chatroom
     const pathnames = window.location.pathname.split("/");
+    const streamerUsername = pathnames[1];
+
+    let userChatBoxElement;
     if(window.location.pathname.length > 1 
         && (pathnames.length == 2
         || pathnames[2] == "chatroom")){
-            NetworkManager.getUserId(pathnames[1])
+            
+            NetworkManager.getUserId(streamerUsername)
             .then(streamerData => {
+                //init chat user box
+                userChatBoxElement = new ChatUserbox(streamerData, streamerUsername == user.username);
                 streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
                 const emoteKeys = Object.keys(streamerData.emotes);
                 onElementObserved("message",(messageContainer)=>{
@@ -44,6 +49,7 @@ window.addEventListener("load", async () => {
                     
                 });
             })
+            .catch(err => console.error(err));
             
     }
 
@@ -76,6 +82,8 @@ window.addEventListener("load", async () => {
         if (usernameEl) {
             usernameEl.classList.add("chat-username");
             usernameEl.addEventListener("click", (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
                 //get user data
                 userChatBoxElement.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
                 NetworkManager.getUserId(usernameEl.innerHTML)

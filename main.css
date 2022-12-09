@@ -138,19 +138,6 @@
   background-repeat: no-repeat;
   width: calc(var(--width) * 1px);
 }
-.chatbox-previewWrap{
-  padding: 0;
-  overflow: hidden;
-  width: 100%;
-  height: 300px;
-}
-.chatbox-preview{
-  width: 1000px;
-  height: 680px;
-  border: 0;
-  transform: scale(calc(var(--width)/1000), 0.45);
-  transform-origin: 0 0;
-}
 .chatbox-header{
   cursor: move;
   padding: 5px;
@@ -162,7 +149,11 @@
   padding: 5px;
 }
 .chatbox-interactions{
-  justify-content: center;
+  justify-content: space-around;
   gap: 10%;
   padding: 10px 0px;
+}
+
+.chatbox-interactions > *{
+  gap: 5px;
 }

@@ -1,8 +1,28 @@
 import { Token } from "../content-scripts/classes/Helpers";
 
-const API = window.location.origin + "/api/v1/"
+const API = window.location.origin + "/"
 
 export class NetworkManager{
+
+    static async buildOptions(body){
+        const token = await Token.get();
+        return (
+            {
+                "credentials": "include",
+                "headers": {
+                    "Accept": "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token,
+                    "X-XSRF-TOKEN": token,
+                },
+                "body": body,
+                "method": "POST",
+                "mode": "cors"
+            }
+        );
+       
+    }
+
     //basic get
     static REQUEST(endpoint, option={}){
         return new Promise((resolve,reject)=>{
@@ -15,47 +35,30 @@ export class NetworkManager{
 
     //gets id of user by the given username
     static getUserId = (username) => {
-        return this.REQUEST(`channels/${username}`);
+        return this.REQUEST(`api/v1/channels/${username}`);
     }
 
     //gets the id of current logged in user
     static getCurrentUserId = ()  => {
-        return this.REQUEST("user");
+        return this.REQUEST("api/v1/user");
     }
 
-    static followUser(channel_id){
-        return Token.get().then(token => (
-             this.REQUEST("channels/user/subscribe", {
-                "credentials": "include",
-                "headers": {
-                    "Accept": "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token,
-                    "X-XSRF-TOKEN": token,
-                },
-                "body": "{\"channel_id\":"+channel_id+"}",
-                "method": "POST",
-                "mode": "cors"
-            })
-        ))
-        .catch(()=>(null))
+    static async followUser(channel_id){
+        const options = await this.buildOptions("{\"channel_id\":"+channel_id+"}");
+        return this.REQUEST("api/v1/channels/user/subscribe", options);
     }
-    static unFollowUser(channel_id){
-        return Token.get().then(token => (
-             this.REQUEST("channels/user/unsubscribe", {
-                "credentials": "include",
-                "headers": {
-                    "Accept": "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token,
-                    "X-XSRF-TOKEN": token,
-                },
-                "body": "{\"channel_id\":"+channel_id+"}",
-                "method": "POST",
-                "mode": "cors"
-            })
-        ))
-        .catch(()=>(null))
+    static async unFollowUser(channel_id){
+        const options = await this.buildOptions("{\"channel_id\":"+channel_id+"}");
+        return this.REQUEST("api/v1/channels/user/unsubscribe", options);
+    }
+
+    static async modUser(user_id){
+        const options = await this.buildOptions("{\"user_id\":"+user_id+"}");
+        return this.REQUEST("channels/add-user", options);
+    }
+    static async unModUser(id){
+        const options = await this.buildOptions("{\"id\":"+id+"}");
+        return this.REQUEST("channels/remove-user", options);
     }
 }
 
@@ -88,39 +91,3 @@ export class NetworkManager{
 //   "credentials": "include"
 // });
 
-
-
-
-// "api/v1/channels/{channel}/unmute-user"
-// "api/v1/channels/{channel}/mute-user"
-
-
-
-//MOD SOMEONE
-// fetch("https://kick.com/channels/add-user", {
-//   "headers": {
-//     "accept": "application/json, text/plain, */*",
-//     "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6",
-//     "authorization": "Bearer ",
-//     "cache-control": "no-cache",
-//     "content-type": "application/json",
-//     "pragma": "no-cache",
-//     "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"",
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform": "\"Windows\"",
-//     "sec-fetch-dest": "empty",
-//     "sec-fetch-mode": "cors",
-//     "sec-fetch-site": "same-origin",
-//     "x-socket-id": "16350.389151",
-//     "x-xsrf-token": ""
-//   },
-//   "referrerPolicy": "strict-origin-when-cross-origin",
-//   "body": "{\"user_id\":10060}",
-//   "method": "POST",
-//   "mode": "cors",
-//   "credentials": "include"
-// });
-
-//UNMOD someone
-//https://kick.com/channels/remove-user
-//"body": "{\"id\":4221}",
