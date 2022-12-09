@@ -113,8 +113,8 @@ export class ChatUserbox extends Draggable{
             this.element.style.top = rect.top + "px";
             this.element.style.left = rect.left + "px";
             //size
-            //this.element.style.width = rect.width + "px";
-            this.element.style.setProperty('--width',  rect.width);
+            const maxWidth = 500;
+            this.element.style.setProperty('--width',  rect.width < maxWidth ? rect.width : maxWidth);
         }
         
         this.element.classList.remove("hidden");

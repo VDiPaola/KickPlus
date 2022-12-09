@@ -108,3 +108,8 @@ export class Token{
         
     }
 }
+
+
+export const escapeRegExp = (string) => {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}

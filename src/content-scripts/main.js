@@ -1,11 +1,11 @@
-import { waitForElement, onElementObserved } from "./classes/Helpers";
+import { waitForElement, onElementObserved,escapeRegExp } from "./classes/Helpers";
 import {DEFAULT_PFP} from "./classes/assets"
 import { ChatUserbox } from "./Elements/ChatUserBox";
 import { NetworkManager } from "../classes-shared/networkManager";
 
 window.addEventListener("load", async () => {
     //INIT custom elements
-    const userChatBox = new ChatUserbox();
+    const userChatBoxElement = new ChatUserbox();
     //Add name to header
     const user = await NetworkManager.getCurrentUserId();
     //make sure they are logged in
@@ -24,30 +24,74 @@ window.addEventListener("load", async () => {
         })
     }
     
-   
-    //clickable names
+    //make sure they are in a stream or chatroom
+    const pathnames = window.location.pathname.split("/");
     if(window.location.pathname.length > 1 
-        && window.location.pathname.split("/").length == 2){
-            onElementObserved("message",(messageContainer)=>{
-                //get the username element
-                let usernameEl = messageContainer.querySelector("div .message > div > div > div > span");
-                if (usernameEl) {
-                    usernameEl.classList.add("chat-username");
-                    usernameEl.addEventListener("click", (e)=>{
-                        //get user data
-                        userChatBox.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
-                        NetworkManager.getUserId(usernameEl.innerHTML)
-                        .then(userData => {
-                            if(userData && userData.user){
-                                userChatBox.show(userData,messageContainer);
-                            }
-                            
-                        })
-                        .catch(err => console.error(err));
-                        
-                    })
-                
-                }
-            });
+        && (pathnames.length == 2
+        || pathnames[2] == "chatroom")){
+            NetworkManager.getUserId(pathnames[1])
+            .then(streamerData => {
+                streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
+                const emoteKeys = Object.keys(streamerData.emotes);
+                onElementObserved("message",(messageContainer)=>{
+                    //user chat box when click name
+                    userChatBox(messageContainer);
+
+                    //resolve emotes from current stream
+                    if(emoteKeys && emoteKeys.length > 0){
+                        resolveEmotes(messageContainer, streamerData, emoteKeys);
+                    }
+                    
+                });
+            })
+            
     }
+
+
+    function resolveEmotes(messageContainer, streamerData, emoteKeys){
+        //get message element
+        const messageElement = messageContainer.querySelector("div .message > div > div > div > span:last-child");
+        if(!messageElement) return;
+        const words = messageElement.innerText.split(" ");
+        const replaceEmote = (emoteName) => {
+            //function to replace word with emote
+            messageElement.innerHTML = messageElement.innerHTML.replace(
+                new RegExp(`\\b${escapeRegExp(emoteName)}\\b`, "g"), 
+                `<div class='w-6 h-6 inline-block align-middle'><img src='${streamerData.emotes[emoteName]}' alt='${emoteName}' title='${emoteName}' class='w-full object-contain top-0 left-0' /></div>`);
+        }
+        //loop through words to check if its an emote
+        for(let word of words){
+            if(emoteKeys.includes(word)){
+                //replace word with emote
+                replaceEmote(word);
+            }
+        }
+    }
+
+
+
+    function userChatBox(messageContainer){
+        //get the username element
+        const usernameEl = messageContainer.querySelector("div .message > div > div > div > span");
+        if (usernameEl) {
+            usernameEl.classList.add("chat-username");
+            usernameEl.addEventListener("click", (e)=>{
+                //get user data
+                userChatBoxElement.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
+                NetworkManager.getUserId(usernameEl.innerHTML)
+                .then(userData => {
+                    if(userData && userData.user){
+                        userChatBoxElement.show(userData,messageContainer);
+                    }
+                    
+                })
+                .catch(err => console.error(err));
+                
+            })
+        }
+    }
+
+
+
+
 })

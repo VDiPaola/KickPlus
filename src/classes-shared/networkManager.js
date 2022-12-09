@@ -62,7 +62,7 @@ export class NetworkManager{
 
 
 
-
+//SEND MESSAGE
 // fetch("https://kick.com/api/v1/chat-messages", {
 //   "headers": {
 //     "accept": "application/json, text/plain, */*",
@@ -93,3 +93,34 @@ export class NetworkManager{
 
 // "api/v1/channels/{channel}/unmute-user"
 // "api/v1/channels/{channel}/mute-user"
+
+
+
+//MOD SOMEONE
+// fetch("https://kick.com/channels/add-user", {
+//   "headers": {
+//     "accept": "application/json, text/plain, */*",
+//     "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6",
+//     "authorization": "Bearer ",
+//     "cache-control": "no-cache",
+//     "content-type": "application/json",
+//     "pragma": "no-cache",
+//     "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"",
+//     "sec-ch-ua-mobile": "?0",
+//     "sec-ch-ua-platform": "\"Windows\"",
+//     "sec-fetch-dest": "empty",
+//     "sec-fetch-mode": "cors",
+//     "sec-fetch-site": "same-origin",
+//     "x-socket-id": "16350.389151",
+//     "x-xsrf-token": ""
+//   },
+//   "referrerPolicy": "strict-origin-when-cross-origin",
+//   "body": "{\"user_id\":10060}",
+//   "method": "POST",
+//   "mode": "cors",
+//   "credentials": "include"
+// });
+
+//UNMOD someone
+//https://kick.com/channels/remove-user
+//"body": "{\"id\":4221}",
