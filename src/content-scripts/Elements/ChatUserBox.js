@@ -25,7 +25,7 @@ export class ChatUserbox extends Draggable{
         //container for rest of information
         const body = elementBuilder("div", {className:"chatbox-body flex"}, container);
         const pfpContainer = elementBuilder("div", {className:"chatbox-pfpContainer flex justify-center items-center"}, body);
-        this.pfp = elementBuilder("img", {className:"w-8 h-8 w-9 h-9 absolute-cover z-10"}, pfpContainer);
+        this.pfp = elementBuilder("img", {className:"absolute-cover z-10"}, pfpContainer);
 
         //container for user details
         const userDetails = elementBuilder("div", {className:"chatbox-userdetails flex  flex-column"}, body);

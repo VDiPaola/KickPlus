@@ -165,6 +165,10 @@
 .chatbox-pfpContainer{
   padding: 0px 15px;
 }
+.chatbox-pfpContainer > img{
+  width:4rem;
+  height:4rem;
+}
 .chatbox-userdetails{
   padding: 5px;
 }
