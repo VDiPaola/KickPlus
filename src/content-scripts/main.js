@@ -1,105 +1,85 @@
-import { waitForElement, onElementObserved,escapeRegExp } from "./classes/Helpers";
-import {DEFAULT_PFP} from "./classes/assets"
+import { waitForElement, onElementObserved,escapeRegExp, elementBuilder, feather,onCustomElementObserved } from "./classes/Helpers";
+
 import { ChatUserbox } from "./Elements/ChatUserBox";
 import { NetworkManager } from "../classes-shared/networkManager";
+import { TheatreMode } from "./Features/TheatreMode";
+import { EmoteResolver } from "./Features/EmoteResolver";
+import {ClickableName} from './Features/ClickableName';
+import {NameTag} from './Elements/Nametag';
 
-window.addEventListener("load", async () => {
-    //Add name to header
-    const user = await NetworkManager.getCurrentUserId();
-    console.log(user)
-    //make sure they are logged in
-    if (user.username) {
-        //set name next to pfp
-        waitForElement(".main-navbar .profile-picture")
-        .then(el => {
-            //REFACTOR
-            const span = document.createElement("span");
-            span.innerHTML = user.username;
-            span.className = "username";
-            const parent = el.parentElement;
-            parent.classList.add("custom-btn");
-            parent.classList.remove("hidden");
-            parent.prepend(span);
+
+class KickPlus{
+    user=null;
+    streamerData=null;
+    emoteKeys=null;
+
+    isLoggedIn=false;
+    isStreamer=false;
+    static async init (){
+        //get user
+        this.user = await NetworkManager.getCurrentUserId();
+        
+
+        //make sure they are logged in
+        if (this.user?.username) {
+            this.isLoggedIn = true;
+            //create name tag in header
+            NameTag.init(this.user.username);
+        }
+
+        //check for title change
+        onCustomElementObserved(document.head.getElementsByTagName("title")[0],this.#onPageChange.bind(this));
+
+        //initialisation
+        ChatUserbox.init();
+        TheatreMode.init();
+
+        this.#getStreamerData();
+         
+        //constantly observe for chat messages
+        waitForElement(document.body,".chat-container,.chatroom")
+        .then((chatContainer)=>{
+            onElementObserved(document.body,"message",(messageContainer)=>{
+                //user chat box when click name
+                ClickableName.handleMessageRecieve(messageContainer);
+
+                //resolve emotes
+                if(this.emoteKeys && this.emoteKeys.length > 0){
+                    EmoteResolver.resolve(messageContainer, this.streamerData, this.emoteKeys);
+                }
+                
+            });
         })
-    }
-    
-    //make sure they are in a stream or chatroom
-    const pathnames = window.location.pathname.split("/");
-    const streamerUsername = pathnames[1];
 
-    let userChatBoxElement;
-    if(window.location.pathname.length > 1 
+    }
+
+    static async #getStreamerData(){
+        //check if they are in a stream(or chatroom) / get streamer data
+        const pathnames = window.location.pathname.split("/");
+        const streamerUsername = pathnames[1];
+        if(window.location.pathname.length > 1 
         && (pathnames.length == 2
         || pathnames[2] == "chatroom")){
-            
+            //get streamer data
             NetworkManager.getUserId(streamerUsername)
             .then(streamerData => {
-                //init chat user box
-                userChatBoxElement = new ChatUserbox(streamerData, streamerUsername == user.username);
                 streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
-                const emoteKeys = Object.keys(streamerData.emotes);
-                onElementObserved("message",(messageContainer)=>{
-                    //user chat box when click name
-                    userChatBox(messageContainer);
-
-                    //resolve emotes from current stream
-                    if(emoteKeys && emoteKeys.length > 0){
-                        resolveEmotes(messageContainer, streamerData, emoteKeys);
-                    }
-                    
-                });
+                this.streamerData = streamerData;
+                this.isStreamer = streamerUsername == this.user?.username;
+                //update chat box
+                ChatUserbox.update(streamerData, this.isStreamer);
+                this.emoteKeys = Object.keys(streamerData.emotes);
             })
             .catch(err => console.error(err));
-            
-    }
-
-
-    function resolveEmotes(messageContainer, streamerData, emoteKeys){
-        //get message element
-        const messageElement = messageContainer.querySelector("div .message > div > div > div > span:last-child");
-        if(!messageElement) return;
-        const words = messageElement.innerText.split(" ");
-        const replaceEmote = (emoteName) => {
-            //function to replace word with emote
-            messageElement.innerHTML = messageElement.innerHTML.replace(
-                new RegExp(`\\b${escapeRegExp(emoteName)}\\b`, "g"), 
-                `<div class='w-6 h-6 inline-block align-middle'><img src='${streamerData.emotes[emoteName]}' alt='${emoteName}' title='${emoteName}' class='w-full object-contain top-0 left-0' /></div>`);
-        }
-        //loop through words to check if its an emote
-        for(let word of words){
-            if(emoteKeys.includes(word)){
-                //replace word with emote
-                replaceEmote(word);
-            }
         }
     }
 
-
-
-    function userChatBox(messageContainer){
-        //get the username element
-        const usernameEl = messageContainer.querySelector("div .message > div > div > div > span");
-        if (usernameEl) {
-            usernameEl.classList.add("chat-username");
-            usernameEl.addEventListener("click", (e)=>{
-                e.preventDefault();
-                e.stopPropagation();
-                //get user data
-                userChatBoxElement.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
-                NetworkManager.getUserId(usernameEl.innerHTML)
-                .then(userData => {
-                    if(userData && userData.user){
-                        userChatBoxElement.show(userData,messageContainer);
-                    }
-                    
-                })
-                .catch(err => console.error(err));
-                
-            })
-        }
+    static async #onPageChange(){
+        TheatreMode.show();
+        this.#getStreamerData();
     }
+}
 
-
-
-
+window.addEventListener("load", async () => {
+    KickPlus.init();
 })

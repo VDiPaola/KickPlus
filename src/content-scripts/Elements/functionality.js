@@ -1,5 +1,5 @@
 export class Draggable{
- dragElement(dragEl, moveEl=null) {
+ static dragElement(dragEl, moveEl=null) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(dragEl.id + "header")) {
     /* if present, the header is where you move the DIV from:*/
@@ -41,7 +41,7 @@ export class Draggable{
   }
 }
 
-  StopDragElement(el){
+  static StopDragElement(el){
     document.onmouseup = null;
     document.onmousemove = null;
     el.onmousedown = null;

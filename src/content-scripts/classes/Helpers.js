@@ -1,6 +1,7 @@
+export const feather = require("feather-icons")
 
 //waits for selected element to load
-export const waitForElement = (selector) => {
+export const waitForElement = (observeEl,selector) => {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
             return resolve(document.querySelector(selector));
@@ -13,7 +14,7 @@ export const waitForElement = (selector) => {
             }
         });
 
-        observer.observe(document.body, {
+        observer.observe(observeEl, {
             childList: true,
             subtree: true
         });
@@ -21,7 +22,7 @@ export const waitForElement = (selector) => {
 }
 
 //waits for selected element to load
-export const waitForElements = (selector, amount) => {
+export const waitForElements = (observeEl,selector, amount) => {
     return new Promise(resolve => {
         if (document.querySelectorAll(selector).length >= amount) {
             return resolve(document.querySelectorAll(selector));
@@ -34,7 +35,7 @@ export const waitForElements = (selector, amount) => {
             }
         });
 
-        observer.observe(document.body, {
+        observer.observe(observeEl, {
             childList: true,
             subtree: true
         });
@@ -42,13 +43,13 @@ export const waitForElements = (selector, amount) => {
 }
 
 //continuously waits for element to appear
-export const onElementObserved = (selectorClass, callback) => {
+export const onElementObserved = (observeEl,selectorId, callback) => {
     const observer = new MutationObserver(mutations => {
         for(let mutation of mutations){
             if(mutation.addedNodes.length > 0){
                     for(let addedNode of mutation.addedNodes){
                         
-                        if(addedNode?.id && addedNode?.id.includes(selectorClass)){
+                        if(addedNode?.id && addedNode?.id.includes(selectorId)){
                             callback(addedNode);
                         }
                     }
@@ -59,9 +60,22 @@ export const onElementObserved = (selectorClass, callback) => {
         
     });
 
-    observer.observe(document.body, {
+    observer.observe(observeEl, {
         childList: true,
         subtree: true
+    });
+}
+
+//continuously waits for element to appear and returns mutations
+export const onCustomElementObserved = (observerEl, callback) => {
+    const observer = new MutationObserver(mutations => {
+        callback(mutations);
+    });
+
+    observer.observe(observerEl, {
+        characterData: true,
+        subtree: true,
+        childList: true
     });
 }
 

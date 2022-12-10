@@ -1,16 +1,15 @@
 import { Draggable } from "./functionality";
-import { elementBuilder } from "../classes/Helpers";
+import { elementBuilder, feather } from "../classes/Helpers";
 import { NetworkManager } from "../../classes-shared/networkManager";
 import { DEFAULT_BANNER_IMAGE, DEFAULT_PFP } from "../classes/assets";
-const feather = require("feather-icons")
 
 export class ChatUserbox extends Draggable{
     userData;
-    constructor(streamerData, isStreamer=false){
-        super()
+    streamerData;
 
-        this.streamerData = streamerData;
-        this.isStreamer = isStreamer;
+    isStreamer=false;
+    hasInit=false;
+    static init(){
         this.element = elementBuilder("div", {className:"chatbox-element hidden no-select"});
         this.element.style.backgroundImage = `url('${DEFAULT_BANNER_IMAGE}')`
         const container = elementBuilder("div", {className:"chatbox-container flex flex-column"}, this.element);
@@ -43,10 +42,10 @@ export class ChatUserbox extends Draggable{
         const interactionsContainer = elementBuilder("div", {className:"chatbox-interactions flex"}, container);
 
         //FUNCTIONAL BUTTONS
-        const functionalContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
+        this.functionalContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
 
         //follow/unfollow
-        this.followButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, functionalContainer);
+        this.followButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, this.functionalContainer);
         this.followButton.addEventListener("click", ()=>{
             if(this.userData?.id) {
                 const innerText = this.followButton.innerText
@@ -70,9 +69,32 @@ export class ChatUserbox extends Draggable{
                 
             }
         })
+
+        //SOCIALS
+        const socialsContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
+        const socialsData = {twitter: "https://twitter.com/",instagram:"https://instagram.com/", facebook:"https://facebook.com/",youtube:"https://youtube.com/"}
+        this.socials = {}
+        for(let social of Object.keys(socialsData)){
+            if(feather.icons?.[social]){
+                const socialButton = elementBuilder("span", {className:"pointer hidden", innerHTML:feather.icons[social].toSvg()}, socialsContainer);
+                socialButton.addEventListener("click", (e)=>{
+                    window.open(socialsData[social] + this.userData?.user?.[social], "_blank");
+                })
+                this.socials[social] = socialButton;
+            }
+            
+        }
+
+        document.body.appendChild(this.element);
+    }
+
+    static update(streamerData, isStreamer=false){
+        this.hasInit = true;
+        this.streamerData = streamerData;
+        this.isStreamer = isStreamer;
         //mod button - only show if in your chat
         if(isStreamer){
-            this.modButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, functionalContainer);
+            this.modButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, this.functionalContainer);
             this.modButton.addEventListener("click", ()=>{
                 if(this.userData?.user_id) {
                     const innerText = this.modButton.innerText
@@ -99,40 +121,19 @@ export class ChatUserbox extends Draggable{
                 }
             })
         }
-
-
-
-        //SOCIALS
-        const socialsContainer = elementBuilder("div", {className:"flex"}, interactionsContainer);
-        const socialsData = {twitter: "https://twitter.com/",instagram:"https://instagram.com/", facebook:"https://facebook.com/",youtube:"https://youtube.com/"}
-        this.socials = {}
-        for(let social of Object.keys(socialsData)){
-            if(feather.icons?.[social]){
-                const socialButton = elementBuilder("span", {className:"pointer hidden", innerHTML:feather.icons[social].toSvg()}, socialsContainer);
-                socialButton.addEventListener("click", (e)=>{
-                    window.open(socialsData[social] + this.userData?.user?.[social], "_blank");
-                })
-                this.socials[social] = socialButton;
-            }
-            
-        }
-        
-
-
-        document.body.appendChild(this.element);
     }
 
-    hide(){
+    static hide(){
         this.element.classList.add("hidden");
         this.StopDragElement(this.element);
     }
 
-    show(userData, msgElement, init=false){
-        console.log(this.socials)
+    static show(userData, msgElement, init=false){
+        if(!this.hasInit) return;
         this.userData = userData;
         //set data
         this.pfp.src = userData.user?.profile_pic || DEFAULT_PFP;
-        this.usernameText.innerText = userData?.user?.username || DEFAULT_BANNER_IMAGE;
+        this.usernameText.innerText = userData?.user?.username || "";
         
         if(!init){
             if(userData?.banner_image?.url){
@@ -174,7 +175,8 @@ export class ChatUserbox extends Draggable{
             this.element.style.left = rect.left + "px";
             //size
             const maxWidth = 500;
-            this.element.style.setProperty('--width',  rect.width < maxWidth ? rect.width : maxWidth);
+            this.element.style.width = (rect.width < maxWidth ? rect.width : maxWidth) + "px"
+            
         }
         
         this.element.classList.remove("hidden");
