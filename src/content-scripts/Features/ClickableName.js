@@ -15,8 +15,8 @@ export class ClickableName{
                 e.preventDefault();
                 e.stopPropagation();
                 //get user data
-                ChatUserbox.show({user:{username:usernameEl.innerHTML,profile_pic:DEFAULT_PFP}},messageContainer, true);
-                NetworkManager.getUserId(usernameEl.innerHTML)
+                ChatUserbox.show({user:{username:usernameEl.innerText,profile_pic:DEFAULT_PFP}},messageContainer, true);
+                NetworkManager.getUserId(usernameEl.innerText)
                 .then(userData => {
                     if(userData && userData.user){
                         //show the user chat box

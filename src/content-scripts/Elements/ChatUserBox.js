@@ -2,13 +2,11 @@ import { Draggable } from "./functionality";
 import { elementBuilder, feather } from "../classes/Helpers";
 import { NetworkManager } from "../../classes-shared/networkManager";
 import { DEFAULT_BANNER_IMAGE, DEFAULT_PFP } from "../classes/assets";
+import { KickPlus } from "../main";
 
 export class ChatUserbox extends Draggable{
-    userData;
-    streamerData;
-
-    isStreamer=false;
     hasInit=false;
+    userData=null;
     static init(){
         this.element = elementBuilder("div", {className:"chatbox-element hidden no-select"});
         this.element.style.backgroundImage = `url('${DEFAULT_BANNER_IMAGE}')`
@@ -88,12 +86,10 @@ export class ChatUserbox extends Draggable{
         document.body.appendChild(this.element);
     }
 
-    static update(streamerData, isStreamer=false){
+    static update(){
         this.hasInit = true;
-        this.streamerData = streamerData;
-        this.isStreamer = isStreamer;
         //mod button - only show if in your chat
-        if(isStreamer){
+        if(KickPlus.isStreamer){
             this.modButton = elementBuilder("div", {className:"btn kick-btn pointer", innerText:"..."}, this.functionalContainer);
             this.modButton.addEventListener("click", ()=>{
                 if(this.userData?.user_id) {
@@ -104,13 +100,13 @@ export class ChatUserbox extends Draggable{
                         NetworkManager.modUser(this.userData.user_id)
                         .then((res)=>{
                             this.modButton.innerText = "Unmod"
-                            this.streamerData.channel_users.push({id:res.id, user_id:this.userData.user_id})
+                            KickPlus.streamerData.channel_users.push({id:res.id, user_id:this.userData.user_id})
                         })
                         .catch(()=>{this.modButton.innerText = innerText})
                     }else if(innerText.includes("Unmod")){
                         //unmod user
                         this.modButton.innerText = "..."
-                        const id = streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0].id;
+                        const id = KickPlus.streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0].id;
                         NetworkManager.unModUser(id)
                         .then(()=>{
                             this.modButton.innerText = "Mod"
@@ -132,20 +128,20 @@ export class ChatUserbox extends Draggable{
         if(!this.hasInit) return;
         this.userData = userData;
         //set data
-        this.pfp.src = userData.user?.profile_pic || DEFAULT_PFP;
-        this.usernameText.innerText = userData?.user?.username || "";
+        this.pfp.src = this.userData?.user?.profile_pic || DEFAULT_PFP;
+        this.usernameText.innerText = this.userData?.user?.username || "";
         
         if(!init){
-            if(userData?.banner_image?.url){
-                this.element.style.setProperty('--chatbox-image', `url('${userData.banner_image.url}')`);
+            if(this.userData?.banner_image?.url){
+                this.element.style.setProperty('--chatbox-image', `url('${this.userData.banner_image.url}')`);
             }
-            this.followerCount.innerText = (userData?.followersCount ?? "0") + " followers"
+            this.followerCount.innerText = (this.userData?.followersCount ?? "0") + " followers"
             this.dragElement(this.header, this.element);
-            this.followButton.innerText = userData.following ? "Unfollow" : "Follow";
+            this.followButton.innerText = this.userData.following ? "Unfollow" : "Follow";
             //MOD BUTTON
-            if(this.isStreamer && this.streamerData?.channel_users){
+            if(KickPlus.isStreamer && KickPlus.streamerData?.channel_users){
                 this.modButton.innerText = "Mod";
-                const channelUser = this.streamerData.channel_users.filter(c => c.user_id == userData.user_id)[0];
+                const channelUser = KickPlus.streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0];
                 if(channelUser && channelUser.role == "moderator"){
                     this.modButton.innerText = "Unmod";
                 }
@@ -153,7 +149,7 @@ export class ChatUserbox extends Draggable{
 
             //SOCIAL BUTTONS
             for(let socialName of Object.keys(this.socials)){
-                if(userData.user?.[socialName]){
+                if(this.userData.user?.[socialName]){
                     this.socials[socialName].classList.remove("hidden")
                 }
             }
@@ -161,7 +157,7 @@ export class ChatUserbox extends Draggable{
             
         }else{
             //only on init - reset values
-            if(this.isStreamer) this.modButton.innerText = "...";
+            if(KickPlus.isStreamer) this.modButton.innerText = "...";
             this.followButton.innerText = "...";
             this.followerCount.innerText = ""
             this.element.style.setProperty('--chatbox-image', `url('')`);

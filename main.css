@@ -67,6 +67,9 @@
   background-color: #e0e0e0 !important;
 }
 
+/* FIX FOR NEW LINES IN PANELS */
+.container{white-space: pre;}
+
 .text-outline{
   color:white;
   text-shadow: -1px -1px 0 var(--outline-color), 1px -1px 0 var(--outline-color), -1px 1px 0 var(--outline-color), 1px 1px 0 var(--outline-color);
