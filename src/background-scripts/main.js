@@ -1,4 +1,4 @@
-//import "./contextMenu/context.js"
+import "./contextMenu/context.js"
 
 
 chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
