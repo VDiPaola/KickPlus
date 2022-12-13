@@ -15,8 +15,9 @@ export class ClickableName{
                 e.preventDefault();
                 e.stopPropagation();
                 //get user data
-                ChatUserbox.show({user:{username:usernameEl.innerText,profile_pic:DEFAULT_PFP}},messageContainer, true);
-                NetworkManager.getUserId(usernameEl.innerText)
+                const username = usernameEl.childNodes[0].nodeValue.trim();
+                ChatUserbox.show({user:{username,profile_pic:DEFAULT_PFP}},messageContainer, true);
+                NetworkManager.getUserId(username)
                 .then(userData => {
                     if(userData && userData.user){
                         //show the user chat box

@@ -5,7 +5,6 @@ export class NameTag{
     //set name next to pfp
     waitForElement(document.body,".main-navbar .profile-picture")
     .then(el => {
-        //REFACTOR
         const span = document.createElement("span");
         span.innerHTML = username;
         span.className = "username";

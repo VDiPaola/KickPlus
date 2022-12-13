@@ -106,3 +106,7 @@ export class NetworkManager{
 
     }
 }
+
+
+//see users followed - GET with auth
+//https://kick.com/api/v1/channels/followed

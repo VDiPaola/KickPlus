@@ -17,26 +17,30 @@ export class KickPlus{
     static isLoggedIn=false;
     static isStreamer=false;
 
-    static #currentStreamer=null;
     static async init (){
         //get user
-        this.user = await NetworkManager.getCurrentUserId();
+        this.userData = await NetworkManager.getCurrentUserId();
         
 
         //make sure they are logged in
         if (this.userData?.username) {
             this.isLoggedIn = true;
             //create name tag in header
-            NameTag.init(this.userData.username);
+            try{NameTag.init(this.userData.username);}
+            catch(e){console.error("KickPlus: failed setting name tag \n" + e)}
+            
         }
 
         //check for title change
-        onCustomElementObserved(document.head.getElementsByTagName("title")[0],this.#onPageChange.bind(this));
+        onCustomElementObserved(document.head,this.#onPageChange.bind(this));
 
         //initialisation
-        ChatUserbox.init();
-        TheatreMode.init();
-        EmoteGrabber.init();
+        try{ChatUserbox.init()}
+        catch(e){console.error("KickPlus: ChatUserbox.init \n" + e)}
+        try{TheatreMode.init()}
+        catch(e){console.error("KickPlus: TheatreMode.init \n" + e)}
+        try{EmoteGrabber.init()}
+        catch(e){console.error("KickPlus: EmoteGrabber.init \n" + e)}
 
         this.#getStreamerData();
          
@@ -45,11 +49,13 @@ export class KickPlus{
         .then((chatContainer)=>{
             onElementObserved(document.body,"message",(messageContainer)=>{
                 //user chat box when click name
-                ClickableName.handleMessageRecieve(messageContainer);
+                try{ClickableName.handleMessageRecieve(messageContainer)}
+                catch(e){console.error("KickPlus: ClickableName.handleMessageRecieve  \n" + e)}
 
                 //resolve emotes
                 if(this.emoteKeys && this.emoteKeys.length > 0){
-                    EmoteResolver.resolve(messageContainer);
+                    try{EmoteResolver.resolve(messageContainer)}
+                    catch(e){console.error("KickPlus: EmoteResolver.resolve  \n" + e)}
                 }
                 
             });
@@ -58,39 +64,45 @@ export class KickPlus{
     }
 
     static async #getStreamerData(streamerUsername=null){
-        //check if they are in a stream(or chatroom) / get streamer data
-        const pathnames = window.location.pathname.split("/");
-        streamerUsername ??= pathnames[1];
-        if(window.location.pathname.length > 1 
-        && (pathnames.length == 2
-        || pathnames[2] == "chatroom")){
-            //get streamer data
-            console.log(streamerUsername)
-            this.#currentStreamer = streamerUsername;
-            NetworkManager.getUserId(streamerUsername)
-            .then(streamerData => {
-                if(streamerData?.user?.username?.toLowerCase() != streamerUsername.toLowerCase()) return;
-                streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
-                this.streamerData = streamerData;
-                this.isStreamer = streamerUsername == this.userData?.username;
-                //update features
-                ChatUserbox.update();
-                EmoteGrabber.update();
-                this.emoteKeys = Object.keys(streamerData.emotes);
-            })
-            .catch(err => console.error(err));
+        try{
+            //check if they are in a stream(or chatroom) / get streamer data
+            const pathnames = window.location.pathname.split("/").filter(element => element);
+            if(window.location.pathname.length > 1 || streamerUsername){
+                if(((pathnames.length == 1 || streamerUsername) || pathnames[1] == "chatroom")){
+                    //get streamer data
+                    streamerUsername ??= pathnames[0];
+                    NetworkManager.getUserId(streamerUsername)
+                    .then(streamerData => {
+                        if(streamerData?.user?.username?.toLowerCase() != streamerUsername.toLowerCase()) return;
+                        //reformat emote list
+                        streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
+                        this.emoteKeys = Object.keys(streamerData.emotes);
+                        this.streamerData = streamerData;
+                        this.isStreamer = streamerUsername == this.userData?.username;
+
+                        //update features
+                        ChatUserbox.update();
+                        EmoteGrabber.update();
+                        
+                    })
+                    .catch(err => console.error(err));
+                }
+            }
+        }catch(e){
+            console.error("KickPlus: KickPlus.#getStreamerData \n" + e)
         }
     }
 
-    static async #onPageChange(e){
-        TheatreMode.show();
-        try{
-            const streamer = e[0].target.innerText.split(" ")[0]
-            this.#getStreamerData(streamer);
-        }catch(e){
-            console.error("KickPlus: failed to update streamer data \n" + e)
+    static async #onPageChange(mutations){
+        const title = mutations.find(x => x.target?.tagName.toLowerCase() == "title");
+        if(title){
+            TheatreMode.show();
+            const streamer = title.target.innerText.split(" ")[0]
+            if(streamer != "kick.com"){
+                this.#getStreamerData(streamer);
+            }
+            
         }
-        
     }
 }
 

@@ -68,7 +68,15 @@
 }
 
 /* FIX FOR NEW LINES IN PANELS */
-.container{white-space: pre;}
+/* .container{white-space: break-spaces;} */
+/* FIX FOR EMOTES GOING OVER EMOJI BUTTON */
+.chatroom form div:has(.btn-emoji) > div > div{
+  overflow-x: auto !important;
+}
+/* ALWAYS SHOW CHAT BUTTON */
+.channel .hidden[class*=cursor-pointer]{
+  visibility: visible !important;
+}
 
 .text-outline{
   color:white;
