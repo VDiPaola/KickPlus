@@ -1,37 +1,33 @@
 import { NetworkManager } from "../../classes-shared/networkManager";
 import { KickPlus } from "../main";
+import { Logger } from "./Logger";
 
 export class EmoteGrabber{
     static #isOn=false;
     static #currentElement=null;
 
     static #handleContextMenu = (e)=>{
-        console.log("a")
         if(!this.#isOn) return null;
         this.#currentElement = e.target;
     }
     static #handleOnMessage = (data)=>{
-        if(!this.#isOn) return true;
-        if (data.type === "emoteGrabber"){
-            //make sure its an emote
-            const emoteName = this.#currentElement?.alt;
-            console.log(KickPlus.streamerData)
-            console.log(emoteName)
-            console.log(KickPlus.emoteKeys.includes(emoteName))
-            if(KickPlus.streamerData && emoteName && KickPlus.emoteKeys.includes(emoteName)){
-                //try to add the emote
-                try{
+        try{
+            if(!this.#isOn) return true;
+            if (data.type === "emoteGrabber"){
+                //make sure its an emote
+                const emoteName = this.#currentElement?.alt;
+                if(KickPlus.streamerData && emoteName && KickPlus.emoteKeys.includes(emoteName)){
+                    //try to add the emote
                     NetworkManager.addEmote(emoteName, KickPlus.streamerData.emotes[emoteName])
-                    .then(()=>{console.log("KickPlus: adding emote")})
-                    .catch(()=>{console.error("KickPlus: failed adding emote")})
-                }catch{
-                    console.error("KickPlus: failed getting uuid")
+                    .then(()=>{Logger.log("Emote Added", true)})
+                    .catch((e)=>{Logger.error("Failed adding emote", e, true)})
                 }
                 
+            }else{
+                return true;
             }
-            
-        }else{
-            return true;
+        }catch(e){
+            Logger.error("failed at EmoteGrabber.#handleOnMessage", e);
         }
     }
 

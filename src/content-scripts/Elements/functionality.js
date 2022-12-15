@@ -32,6 +32,7 @@ export class Draggable{
     const el = (moveEl ?? dragEl);
     el.style.top = (el.offsetTop - pos2) + "px";
     el.style.left = (el.offsetLeft - pos1) + "px";
+    el.style.right = null;
   }
 
   function closeDragElement() {

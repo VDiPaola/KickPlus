@@ -1,0 +1,59 @@
+
+/* User Chat Box */
+
+.chatbox-element::before {
+    --blur-amount: 2px;
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  
+    display: block;
+    background-image: var(--chatbox-image);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+  
+    filter: blur(var(--blur-amount));
+  }
+  .chatbox-element{
+    --chatbox-image: "url('')";
+    overflow: hidden;
+    position: fixed;
+    z-index: 99;
+    border-radius: 5px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .chatbox-container{
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    gap: 3px;
+  }
+  .chatbox-header{
+    cursor: move;
+    padding: 5px;
+  }
+  .chatbox-pfpContainer{
+    padding: 0px 15px;
+  }
+  .chatbox-pfpContainer > img{
+    width:4rem;
+    height:4rem;
+  }
+  .chatbox-userdetails{
+    padding: 5px;
+  }
+  .chatbox-interactions{
+    justify-content: space-around;
+    gap: 10%;
+    padding: 10px 0px;
+  }
+  
+  .chatbox-interactions > *{
+    gap: 5px;
+  }

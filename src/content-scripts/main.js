@@ -7,6 +7,7 @@ import { EmoteResolver } from "./Features/EmoteResolver";
 import {ClickableName} from './Features/ClickableName';
 import {NameTag} from './Elements/Nametag';
 import { EmoteGrabber } from "./Features/EmoteGrabber";
+import { UserSettings } from "./Features/UserSettings";
 
 
 export class KickPlus{
@@ -41,12 +42,14 @@ export class KickPlus{
         catch(e){console.error("KickPlus: TheatreMode.init \n" + e)}
         try{EmoteGrabber.init()}
         catch(e){console.error("KickPlus: EmoteGrabber.init \n" + e)}
-
+        
         this.#getStreamerData();
          
-        //constantly observe for chat messages
+        //wait for chatroom element
         waitForElement(document.body,".chat-container,.chatroom")
         .then((chatContainer)=>{
+            UserSettings.init();
+            //constantly observe for chat messages
             onElementObserved(document.body,"message",(messageContainer)=>{
                 //user chat box when click name
                 try{ClickableName.handleMessageRecieve(messageContainer)}

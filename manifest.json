@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Kick Plus",
-    "version": "1.5.0",
+    "version": "1.6.5",
     "description": "improvements to kick.com",
     "icons":{
         "128": "icon.png",
@@ -11,7 +11,8 @@
 
     "permissions": [
         "cookies",
-        "contextMenus"
+        "contextMenus",
+        "storage"
     ],
 
     "background":{
@@ -23,7 +24,7 @@
         "matches":    ["*://*.kick.com/*"],
         "js":         ["./dist/content-scripts/main.js"]
     },{
-        "css": [ "./main.css" ],
+        "css": [ "./styles/main.css","./styles/settings.css","./styles/userChatBox.css" ],
         "matches":    ["*://*.kick.com/*"]
      } ],
 

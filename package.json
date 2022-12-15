@@ -4,12 +4,13 @@
   "description": "",
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
-    "publish": "powershell compress-archive -Force './dist','./manifest.json','./main.css','./icon.png' KickPlus.zip"
+    "publish": "powershell compress-archive -Force './dist','./manifest.json','./styles','./icon.png' KickPlus.zip"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "raw-loader": "^4.0.2",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
   },

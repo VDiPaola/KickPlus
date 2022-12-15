@@ -43,11 +43,12 @@ class Setting{
 
 
 export class GlobalSetting {
-    static CASE_SENSITIVE = new Setting('CASE_SENSITIVE', false);
+    static HEADER_USERNAME = new Setting('HEADER_USERNAME', true);
 
     static Get(keys){
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.get(keys, (result) => {
+            chrome.storage.sync.get(keys)
+            .then((result)=>{
                 resolve(result);
             })
             .catch(err => reject(err));
@@ -56,7 +57,8 @@ export class GlobalSetting {
 
     static Set(key, value){
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.set({[key]: value}, (result) => {
+            chrome.storage.sync.set({[key]: value})
+            .then((result) => {
                 resolve(result);
             })
             .catch(err => reject(err));
@@ -70,7 +72,8 @@ export class LocalSetting {
 
     static Get(keys){
         return new Promise((resolve, reject) => {
-            chrome.storage.local.get(keys, (result) => {
+            chrome.storage.local.get(keys)
+            .then((result) => {
                 resolve(result);
             })
             .catch(err => reject(err));
@@ -79,7 +82,8 @@ export class LocalSetting {
 
     static Set(key, value){
         return new Promise((resolve, reject) => {
-            chrome.storage.local.set({[key]: value}, (result) => {
+            chrome.storage.local.set({[key]: value})
+            .then((result) => {
                 resolve(result);
             })
             .catch(err => reject(err));
