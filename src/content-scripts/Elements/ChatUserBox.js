@@ -3,6 +3,7 @@ import { elementBuilder, feather } from "../classes/Helpers";
 import { NetworkManager } from "../../classes-shared/networkManager";
 import { DEFAULT_BANNER_IMAGE, DEFAULT_PFP } from "../classes/assets";
 import { KickPlus } from "../main";
+import { GlobalSetting } from "../../classes-shared/Settings";
 
 export class ChatUserbox extends Draggable{
     hasInit=false;
@@ -125,56 +126,63 @@ export class ChatUserbox extends Draggable{
     }
 
     static show(userData, msgElement, init=false){
+        //show window if setting is enabled
         if(!this.hasInit) return;
-        this.userData = userData;
-        //set data
-        this.pfp.src = this.userData?.user?.profile_pic || DEFAULT_PFP;
-        this.usernameText.innerText = this.userData?.user?.username || "";
-        
-        if(!init){
-            if(this.userData?.banner_image?.url){
-                this.element.style.setProperty('--chatbox-image', `url('${this.userData.banner_image.url}')`);
-            }
-            this.followerCount.innerText = (this.userData?.followersCount ?? "0") + " followers"
-            this.dragElement(this.header, this.element);
-            this.followButton.innerText = this.userData.following ? "Unfollow" : "Follow";
-            //MOD BUTTON
-            if(KickPlus.isStreamer && KickPlus.streamerData?.channel_users){
-                this.modButton.innerText = "Mod";
-                const channelUser = KickPlus.streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0];
-                if(channelUser && channelUser.role == "moderator"){
-                    this.modButton.innerText = "Unmod";
+        GlobalSetting.CHAT_USER_BOX.Get()
+        .then(isEnabled => {
+            if(!isEnabled) return;
+            this.userData = userData;
+            //set data
+            this.pfp.src = this.userData?.user?.profile_pic || DEFAULT_PFP;
+            this.usernameText.innerText = this.userData?.user?.username || "";
+            
+            if(!init){
+                if(this.userData?.banner_image?.url){
+                    this.element.style.setProperty('--chatbox-image', `url('${this.userData.banner_image.url}')`);
                 }
-            }
-
-            //SOCIAL BUTTONS
-            for(let socialName of Object.keys(this.socials)){
-                if(this.userData.user?.[socialName]){
-                    this.socials[socialName].classList.remove("hidden")
+                this.followerCount.innerText = (this.userData?.followersCount ?? "0") + " followers"
+                this.dragElement(this.header, this.element);
+                this.followButton.innerText = this.userData.following ? "Unfollow" : "Follow";
+                //MOD BUTTON
+                if(KickPlus.isStreamer && KickPlus.streamerData?.channel_users){
+                    this.modButton.innerText = "Mod";
+                    const channelUser = KickPlus.streamerData.channel_users.filter(c => c.user_id == this.userData.user_id)[0];
+                    if(channelUser && channelUser.role == "moderator"){
+                        this.modButton.innerText = "Unmod";
+                    }
                 }
-            }
-            
-            
-        }else{
-            //only on init - reset values
-            if(KickPlus.isStreamer) this.modButton.innerText = "...";
-            this.followButton.innerText = "...";
-            this.followerCount.innerText = ""
-            this.element.style.setProperty('--chatbox-image', `url('')`);
-            for(let socialName of Object.keys(this.socials)){
-                this.socials[socialName].classList.add("hidden");
-            }
 
-            //position
-            let rect = msgElement.getBoundingClientRect();
-            this.element.style.top = rect.top + "px";
-            this.element.style.left = rect.left + "px";
-            //size
-            const maxWidth = 500;
-            this.element.style.width = (rect.width < maxWidth ? rect.width : maxWidth) + "px"
+                //SOCIAL BUTTONS
+                for(let socialName of Object.keys(this.socials)){
+                    if(this.userData.user?.[socialName]){
+                        this.socials[socialName].classList.remove("hidden")
+                    }
+                }
+                
+                
+            }else{
+                //only on init - reset values
+                if(KickPlus.isStreamer) this.modButton.innerText = "...";
+                this.followButton.innerText = "...";
+                this.followerCount.innerText = ""
+                this.element.style.setProperty('--chatbox-image', `url('')`);
+                for(let socialName of Object.keys(this.socials)){
+                    this.socials[socialName].classList.add("hidden");
+                }
+
+                //position
+                let rect = msgElement.getBoundingClientRect();
+                this.element.style.top = rect.top + "px";
+                this.element.style.left = rect.left + "px";
+                //size
+                const maxWidth = 500;
+                this.element.style.width = (rect.width < maxWidth ? rect.width : maxWidth) + "px"
+                
+            }
             
-        }
+            this.element.classList.remove("hidden");
+        })
         
-        this.element.classList.remove("hidden");
+        
     }
 }

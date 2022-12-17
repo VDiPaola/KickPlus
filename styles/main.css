@@ -1,8 +1,7 @@
 :root{
-    --tooltipBG: rgba(32, 32, 32, 0.425);
-    --outline-color:#000
+  --tooltipBG: rgba(32, 32, 32, 0.425);
+  --outline-color:#000;
 }
-  
 
 /* GENERIC */
 .flex{
@@ -47,6 +46,10 @@
   transform: scale(-1, 1);
 }
 
+.color-black{
+  color:black;
+}
+
 .custom-tooltip[title]:hover:after, .custom-tooltip-secondary[title]:hover:after{
     content: attr(title);
     position: absolute;
@@ -77,16 +80,21 @@
 div:has(> img:not([srcset])) > img[sizes='2vw'][class='w-full object-contain']{
   display: none;
 }
-/* CHAT SIZING SELECTORS */
-/* .message span{
-  font-size: 2px !important;
+
+/* CHAT SIZING  */
+.kp-fontsize .message div:has(> span){
+  font-size: var(--kp-default-chat-font-size);
+  line-height: var(--kp-default-chat-line-height);
 }
-.message svg{
-  width: 0.5rem !important;
+.kp-fontsize .message div:has(> img){
+  width: var(--kp-default-chat-image-size);
+  height: var(--kp-default-chat-image-size);
 }
-.message div:has(> div > img){
-  width: 0.5rem !important;
-} */
+.kp-fontsize .message div:has(> svg){
+  width: var(--kp-default-chat-svg-size);
+  height: var(--kp-default-chat-svg-size);
+}
+
 
 .text-outline{
   color:white;

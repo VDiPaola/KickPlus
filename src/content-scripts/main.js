@@ -8,6 +8,8 @@ import {ClickableName} from './Features/ClickableName';
 import {NameTag} from './Elements/Nametag';
 import { EmoteGrabber } from "./Features/EmoteGrabber";
 import { UserSettings } from "./Features/UserSettings";
+import { ChatFontSize } from "./Features/ChatFontSize";
+import { ChatTimestampFix } from "./Features/ChatTimestampFix";
 
 
 export class KickPlus{
@@ -34,21 +36,22 @@ export class KickPlus{
 
         //check for title change
         onCustomElementObserved(document.head,this.#onPageChange.bind(this));
-
+       
         //initialisation
         try{ChatUserbox.init()}
         catch(e){console.error("KickPlus: ChatUserbox.init \n" + e)}
         try{TheatreMode.init()}
         catch(e){console.error("KickPlus: TheatreMode.init \n" + e)}
-        try{EmoteGrabber.init()}
-        catch(e){console.error("KickPlus: EmoteGrabber.init \n" + e)}
+        EmoteGrabber.init();
+        
         
         this.#getStreamerData();
          
         //wait for chatroom element
-        waitForElement(document.body,".chat-container,.chatroom")
+        waitForElement(document.body,".chat-container .chatroom,.chatroom")
         .then((chatContainer)=>{
             UserSettings.init();
+            ChatFontSize.init(chatContainer);
             //constantly observe for chat messages
             onElementObserved(document.body,"message",(messageContainer)=>{
                 //user chat box when click name
@@ -61,6 +64,7 @@ export class KickPlus{
                     catch(e){console.error("KickPlus: EmoteResolver.resolve  \n" + e)}
                 }
                 
+                ChatTimestampFix.handleMessageRecieve(messageContainer);
             });
         })
 
@@ -78,7 +82,7 @@ export class KickPlus{
                     .then(streamerData => {
                         if(streamerData?.user?.username?.toLowerCase() != streamerUsername.toLowerCase()) return;
                         //reformat emote list
-                        streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item.image.full, obj) ,{});
+                        streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item?.image?.full, obj) ,{});
                         this.emoteKeys = Object.keys(streamerData.emotes);
                         this.streamerData = streamerData;
                         this.isStreamer = streamerUsername == this.userData?.username;

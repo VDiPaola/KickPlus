@@ -44,6 +44,9 @@ class Setting{
 
 export class GlobalSetting {
     static HEADER_USERNAME = new Setting('HEADER_USERNAME', true);
+    static CHAT_USER_BOX = new Setting('CHAT_USER_BOX', true);
+    static EMOTE_RESOLVER = new Setting('EMOTE_RESOLVER', true);
+    static CHAT_FONT_SIZE = new Setting('CHAT_FONT_SIZE', "default");
 
     static Get(keys){
         return new Promise((resolve, reject) => {

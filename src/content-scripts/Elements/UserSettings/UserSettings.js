@@ -2,7 +2,7 @@ import { elementBuilder, feather, getWindowWidth } from "../../classes/Helpers";
 import settingsIcon from './settingsIcon.svg'
 import { UserSettings } from "../../Features/UserSettings";
 import { Draggable } from "../functionality";
-import { GeneralTab } from "./generalTab";
+import { AccessibilityTab, GeneralTab } from "./tabs";
 import { Logger } from "../../Features/Logger";
 
 export class SettingsButton{
@@ -38,7 +38,10 @@ export class SettingsWindow extends Draggable{
         this.#createTabs();
         const tabNames = Object.keys(this.tabs);
         for(let tabName of tabNames){
-            elementBuilder("div", {className:"w-full text-center", innerText:tabName}, tabs);
+            const tab = elementBuilder("div", {className:"w-full text-center", innerText:tabName}, tabs);
+            tab.addEventListener("click", (e)=>{
+                this.setContentTab(tabName);
+            })
         }
 
         //first tab content
@@ -58,6 +61,7 @@ export class SettingsWindow extends Draggable{
 
     static #createTabs(){
         GeneralTab.create();
+        AccessibilityTab.create();
     }
 
 }
@@ -92,6 +96,35 @@ export class SettingsTab{
             })
             .finally(()=>{
                 if(callback) callback(e.target.checked);
+            })
+        });
+    }
+
+    addDropdown(text, values, setting, callback=null){
+        //create element
+        const container = elementBuilder("div",{className:"flex items-center"},this.container);
+        elementBuilder("p", {innerText:text}, container);
+        const select = elementBuilder("select",{className:"flex justify-center items-center color-black"},container);
+
+        //get default value
+        setting.Get()
+        .then((currentValue)=>{
+            for(let value of values){
+                const attributes = {innerText:value};
+                if (value == currentValue) attributes["selected"] = true;
+                elementBuilder("option", attributes , select);
+            }
+        })
+
+        
+        //update setting when select option
+        select.addEventListener("change", ()=>{
+            setting.Set(select.options[select.options.selectedIndex].text)
+            .catch(err=> {
+                Logger.error("Failed to update chrome storage", err, true);
+            })
+            .finally(()=>{
+                if(callback) callback(select.options[select.options.selectedIndex].text);
             })
         });
     }
