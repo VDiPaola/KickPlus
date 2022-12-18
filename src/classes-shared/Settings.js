@@ -1,4 +1,6 @@
 
+import { BROWSER } from "../content-scripts/classes/Helpers";
+
 class Setting{
     constructor(key, defaultValue, local=false){
         this.key = key;
@@ -50,7 +52,7 @@ export class GlobalSetting {
 
     static Get(keys){
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.get(keys)
+            BROWSER.storage.sync.get(keys)
             .then((result)=>{
                 resolve(result);
             })
@@ -60,7 +62,7 @@ export class GlobalSetting {
 
     static Set(key, value){
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.set({[key]: value})
+            BROWSER.storage.sync.set({[key]: value})
             .then((result) => {
                 resolve(result);
             })
@@ -75,7 +77,7 @@ export class LocalSetting {
 
     static Get(keys){
         return new Promise((resolve, reject) => {
-            chrome.storage.local.get(keys)
+            BROWSER.storage.local.get(keys)
             .then((result) => {
                 resolve(result);
             })
@@ -85,7 +87,7 @@ export class LocalSetting {
 
     static Set(key, value){
         return new Promise((resolve, reject) => {
-            chrome.storage.local.set({[key]: value})
+            BROWSER.storage.local.set({[key]: value})
             .then((result) => {
                 resolve(result);
             })

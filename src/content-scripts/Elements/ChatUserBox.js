@@ -9,7 +9,7 @@ export class ChatUserbox extends Draggable{
     hasInit=false;
     userData=null;
     static init(){
-        this.element = elementBuilder("div", {className:"chatbox-element hidden no-select"});
+        this.element = elementBuilder("div", {className:"chatbox-element display-none no-select"});
         this.element.style.backgroundImage = `url('${DEFAULT_BANNER_IMAGE}')`
         const container = elementBuilder("div", {className:"chatbox-container flex flex-column"}, this.element);
         //heading with exit cross
@@ -75,7 +75,7 @@ export class ChatUserbox extends Draggable{
         this.socials = {}
         for(let social of Object.keys(socialsData)){
             if(feather.icons?.[social]){
-                const socialButton = elementBuilder("span", {className:"pointer hidden", innerHTML:feather.icons[social].toSvg()}, socialsContainer);
+                const socialButton = elementBuilder("span", {className:"pointer display-none", innerHTML:feather.icons[social].toSvg()}, socialsContainer);
                 socialButton.addEventListener("click", (e)=>{
                     window.open(socialsData[social] + this.userData?.user?.[social], "_blank");
                 })
@@ -121,7 +121,7 @@ export class ChatUserbox extends Draggable{
     }
 
     static hide(){
-        this.element.classList.add("hidden");
+        this.element.classList.add("display-none");
         this.StopDragElement(this.element);
     }
 
@@ -155,7 +155,7 @@ export class ChatUserbox extends Draggable{
                 //SOCIAL BUTTONS
                 for(let socialName of Object.keys(this.socials)){
                     if(this.userData.user?.[socialName]){
-                        this.socials[socialName].classList.remove("hidden")
+                        this.socials[socialName].classList.remove("display-none")
                     }
                 }
                 
@@ -167,7 +167,7 @@ export class ChatUserbox extends Draggable{
                 this.followerCount.innerText = ""
                 this.element.style.setProperty('--chatbox-image', `url('')`);
                 for(let socialName of Object.keys(this.socials)){
-                    this.socials[socialName].classList.add("hidden");
+                    this.socials[socialName].classList.add("display-none");
                 }
 
                 //position
@@ -180,7 +180,7 @@ export class ChatUserbox extends Draggable{
                 
             }
             
-            this.element.classList.remove("hidden");
+            this.element.classList.remove("display-none");
         })
         
         

@@ -48,3 +48,13 @@ export class Draggable{
     el.onmousedown = null;
   }
 }
+
+export class Selector{
+  static has(parentsSelector, childSelector){
+    const parents = document.querySelectorAll(parentsSelector);
+    for(let parent of parents){
+        const child = parent.querySelector(childSelector);
+        if(child?.parentNode) return child.parentNode;
+    }
+  }
+}

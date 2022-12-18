@@ -69,7 +69,16 @@ export class NetworkManager{
     //gets image data as base64 from proxy server
     static async proxyImage(url) {
         return new Promise((resolve,reject)=>{
-            fetch(BACKEND + "proxy", {body:JSON.stringify({url:url}), method:"POST", headers:{"content-type":"application/json"}})
+            const options = 
+            {
+                headers: {
+                    "content-type":"application/json"
+                },
+                body:JSON.stringify({url}),
+                method: "POST",
+                mode: "cors"
+            };
+            fetch(BACKEND + "proxy", options)
             .then(res=>res.text())
             .then(res=>resolve(res))
             .catch(err=>reject(err))
@@ -94,7 +103,7 @@ export class NetworkManager{
                 for(let h in options.headers){
                     req.setRequestHeader(h,options.headers[h])
                 }
-                req.onload= async (e)=>{
+                req.onloadend= async (e)=>{
                     //when uploaded make request to add emote to channel
                     const options = await this.buildOptions({key:storageData.key,name,uuid:storageData.uuid});
                     return this.REQUEST("emotes", options);

@@ -14,7 +14,7 @@ export class NameTag{
         this.#usernameElement.className = "username";
         this.#container = el.parentElement;
         this.#container.classList.add("custom-btn");
-        this.#container.classList.remove("hidden");
+        this.#container.classList.remove("display-none");
 
         //hide if disabled in settings
         GlobalSetting.HEADER_USERNAME.Get()
@@ -27,11 +27,11 @@ export class NameTag{
 
    static hide(){
         this.#container?.classList?.remove("custom-btn");
-        this.#usernameElement?.classList?.add("hidden");
+        this.#usernameElement?.classList?.add("display-none");
    }
 
    static show(){
         this.#container?.classList?.add("custom-btn");
-        this.#usernameElement?.classList?.remove("hidden");
+        this.#usernameElement?.classList?.remove("display-none");
    }
 }

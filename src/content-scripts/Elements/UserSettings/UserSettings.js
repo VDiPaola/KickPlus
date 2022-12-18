@@ -20,7 +20,7 @@ export class SettingsWindow extends Draggable{
     static #content;
     static create(){
         //containers
-        const container = elementBuilder("div", {className:"hidden flex flex-column settings-container"}, document.body);
+        const container = elementBuilder("div", {className:"display-none flex flex-column settings-container"}, document.body);
         const header = elementBuilder("div", {className:"settings-header flex w-full justify-right"}, container);
         this.dragElement(header, container);
         elementBuilder("div", {innerText:"Kick Plus Settings", className:"flex justify-center flex-grow"}, header);
@@ -91,7 +91,7 @@ export class SettingsTab{
         checkbox.addEventListener("change", (e)=>{
             setting.Set(e.target.checked)
             .catch(err=> {
-                Logger.error("Failed to update chrome storage", err, true);
+                Logger.error("Failed to update browser storage", err, true);
                 e.target.checked = !e.target.checked;
             })
             .finally(()=>{
@@ -121,7 +121,7 @@ export class SettingsTab{
         select.addEventListener("change", ()=>{
             setting.Set(select.options[select.options.selectedIndex].text)
             .catch(err=> {
-                Logger.error("Failed to update chrome storage", err, true);
+                Logger.error("Failed to update browser storage", err, true);
             })
             .finally(()=>{
                 if(callback) callback(select.options[select.options.selectedIndex].text);

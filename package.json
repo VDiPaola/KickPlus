@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
-    "publish": "powershell compress-archive -Force './dist','./manifest.json','./styles','./icon.png' KickPlus.zip"
+    "publish": "powershell compress-archive -Force './dist','./manifest.json','./styles','./icon.png' KickPlus.zip",
+    "toggleManifest": "powershell ./toggleManifest.ps1"
   },
   "author": "",
   "license": "ISC",

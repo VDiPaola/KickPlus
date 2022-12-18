@@ -1,13 +1,15 @@
+import { BROWSER } from "../../content-scripts/classes/Helpers";
 
-chrome.runtime.onInstalled.addListener( () => {
-  chrome.contextMenus.create({
+
+BROWSER.runtime.onInstalled.addListener( () => {
+  BROWSER.contextMenus.create({
     id: 'kp',
     title: "Kick Plus", 
     contexts:[ "image" ],
     documentUrlPatterns: ["*://kick.com/*"]
   });
 
-  chrome.contextMenus.create({
+  BROWSER.contextMenus.create({
     parentId: 'kp',
     id: "emoteGrabber",
     title: "Add emote to your channel", 
@@ -16,10 +18,10 @@ chrome.runtime.onInstalled.addListener( () => {
 
 });
 
-chrome.contextMenus.onClicked.addListener( ( info, tab ) => {
+BROWSER.contextMenus.onClicked.addListener( ( info, tab ) => {
   if (info.parentMenuItemId == "kp") {
         if(info.menuItemId == "emoteGrabber"){
-            chrome.tabs.sendMessage(tab.id, {type:"emoteGrabber"}, {frameId: info.frameId});
+            BROWSER.tabs.sendMessage(tab.id, {type:"emoteGrabber"}, {frameId: info.frameId});
         }
   }
 });

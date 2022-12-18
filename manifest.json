@@ -1,7 +1,7 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Kick Plus",
-    "version": "1.6.5",
+    "version": "1.7.0",
     "description": "improvements to kick.com",
     "icons":{
         "128": "icon.png",
@@ -12,24 +12,28 @@
     "permissions": [
         "cookies",
         "contextMenus",
-        "storage"
+        "storage",
+        "*://*.kick.com/*",
+        "*://*.enzon1k.com/*"
     ],
 
     "background":{
-        "service_worker":"./dist/background.js",
-        "type": "module"
+        "scripts":["./dist/background.js"]
+    },
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "kickplus@example.org"
+        }
     },
 
     "content_scripts": [{
-        "matches":    ["*://*.kick.com/*"],
+        "matches":    ["*://*.kick.com/*", "*://*.enzon1k.com/*"],
         "js":         ["./dist/content-scripts/main.js"]
     },{
         "css": [ "./styles/main.css","./styles/settings.css","./styles/userChatBox.css" ],
         "matches":    ["*://*.kick.com/*"]
-     } ],
+     } ]
 
-     "host_permissions": [
-        "*://*.kick.com/*"
-    ]
 
 }

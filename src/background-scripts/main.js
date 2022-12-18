@@ -1,16 +1,17 @@
 import "./contextMenu/context.js"
+import { BROWSER } from "../content-scripts/classes/Helpers.js";
+import { Logger } from "../content-scripts/Features/Logger.js";
 
 
-chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
+BROWSER.runtime.onMessage.addListener((data, sender, sendResponse) => {
     if (data.type === "token"){
-        chrome.cookies.get({name:"XSRF-TOKEN", url:"https://kick.com"})
+        BROWSER.cookies?.get({name:"XSRF-TOKEN", url:"https://kick.com"})
         .then(token=>{
-            chrome.tabs.sendMessage(sender.tab.id, {type:"token", message:token?.value})
+            BROWSER.tabs.sendMessage(sender.tab.id, {type:"token", message:token?.value})
         })
+        .catch(err => Logger.error("Couldnt get token from cookies", err, true))
     }else{
         return true;
     }
     
 });
-
-

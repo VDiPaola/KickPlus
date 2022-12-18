@@ -1,4 +1,6 @@
 export const feather = require("feather-icons")
+export const isChrome = chrome.runtime.getURL('').startsWith('chrome-extension://');
+export const BROWSER = isChrome ? chrome : browser;
 
 //waits for selected element to load
 export const waitForElement = (observeEl,selector) => {
@@ -105,15 +107,15 @@ export class Token{
                     (data, sender, sendResponse) => {
                         if(data?.type === "token" && data?.message){
                             const token = decodeURIComponent(data.message ?? "");
-                            chrome.runtime.onMessage.removeListener(listener);
+                            BROWSER.runtime.onMessage.removeListener(listener);
                             this.#isListening = false;
                             this.#token = token;
                             resolve(token);
                         }
                         return true;
                     }
-                chrome.runtime.onMessage.addListener(listener);
-                chrome.runtime.sendMessage({type:"token"})
+                BROWSER.runtime.onMessage.addListener(listener);
+                BROWSER.runtime.sendMessage({type:"token"})
             }else{
                 reject("currently listening for token");
             }

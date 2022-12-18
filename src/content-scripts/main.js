@@ -101,7 +101,7 @@ export class KickPlus{
     }
 
     static async #onPageChange(mutations){
-        const title = mutations.find(x => x.target?.tagName.toLowerCase() == "title");
+        const title = mutations.find(x => x.target?.tagName?.toLowerCase() == "title");
         if(title){
             TheatreMode.show();
             const streamer = title.target.innerText.split(" ")[0]
@@ -113,6 +113,6 @@ export class KickPlus{
     }
 }
 
-window.addEventListener("load", async () => {
+window.addEventListener("pageshow", async () => {
     KickPlus.init();
 })
