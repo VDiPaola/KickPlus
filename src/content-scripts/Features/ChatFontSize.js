@@ -20,7 +20,6 @@ export class ChatFontSize{
             if(!this.chatContainer) {
                 this.chatContainer = document.querySelector(".chat-container .chatroom,.chatroom");
             }
-            console.log(this.chatContainer)
             document.body.style.setProperty("--kp-default-chat-font-size", (defaultFontSize*multiplier) + "rem")
             document.body.style.setProperty("--kp-default-chat-line-height", (defaultLineHeight*multiplier) + "rem")
             document.body.style.setProperty("--kp-default-chat-image-size", (defaultImageSize*multiplier) + "rem")
