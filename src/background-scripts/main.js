@@ -10,8 +10,19 @@ BROWSER.runtime.onMessage.addListener((data, sender, sendResponse) => {
             BROWSER.tabs.sendMessage(sender.tab.id, {type:"token", message:token?.value})
         })
         .catch(err => Logger.error("Couldnt get token from cookies", err, true))
+        .finally(()=>{return true})
+    }else if (data.type == "request" && data.dataTag){
+        fetch(data.url, data.options)
+            .then(res => res.json())
+            .then(res => BROWSER.tabs.sendMessage(sender.tab.id, {type:"response", message:res, dataTag:data.dataTag}))
+            .catch(err => BROWSER.tabs.sendMessage(sender.tab.id, {type:"response", error:err, dataTag:data.dataTag}));
     }else{
         return true;
     }
     
 });
+
+// BROWSER.webRequest.onBeforeRequest.addListener(
+//     (req)=>{console.log(req)},
+//     {urls:["*://*.kick.com/*", "*://kick.com/*"]}
+// )

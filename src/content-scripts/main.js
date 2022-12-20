@@ -10,7 +10,7 @@ import { EmoteGrabber } from "./Features/EmoteGrabber";
 import { UserSettings } from "./Features/UserSettings";
 import { ChatFontSize } from "./Features/ChatFontSize";
 import { ChatTimestampFix } from "./Features/ChatTimestampFix";
-
+import { DataManager, DataTags } from "./classes/DataManager";
 
 export class KickPlus{
     static userData=null;
@@ -19,21 +19,24 @@ export class KickPlus{
 
     static isLoggedIn=false;
     static isStreamer=false;
-
+    
     static async init (){
-        //get user
-        this.userData = await NetworkManager.getCurrentUserId();
+        //initialise data manager
+        DataManager.init();
+
+        DataManager.bindCallback(DataTags.CURRENT_USER_DATA, (data)=>{
+            if(data.value){
+                this.isLoggedIn = true;
+                this.userData = data.value;
+                //create name tag in header
+                try{NameTag.init(this.userData.username);}
+                catch(e){console.error("KickPlus: failed setting name tag \n" + e)}
+            }else{
+                console.error("couldnt get current user data", data.error, true);
+            }
+        })
+        return;
         
-
-        //make sure they are logged in
-        if (this.userData?.username) {
-            this.isLoggedIn = true;
-            //create name tag in header
-            try{NameTag.init(this.userData.username);}
-            catch(e){console.error("KickPlus: failed setting name tag \n" + e)}
-            
-        }
-
         //check for title change
         onCustomElementObserved(document.head,this.#onPageChange.bind(this));
        

@@ -1,11 +1,13 @@
+import { DataTags } from "../content-scripts/classes/DataManager";
 import { Token, dataURLtoFile } from "../content-scripts/classes/Helpers";
+import { BROWSER } from "../content-scripts/classes/Helpers";
 const API = window.location.origin + "/"
 
 const BACKEND = "https://api.enzon1k.com/";
 
 export class NetworkManager{
 
-    static async buildOptions(body={}, method="POST", hasBearer=true, contentType="application/json"){
+    static async buildOptions(body=null, method="POST", hasBearer=true, contentType="application/json"){
         const token = await Token.get();
         const options = 
             {
@@ -17,7 +19,7 @@ export class NetworkManager{
                    "x-amz-acl": "public-read",
 
                 },
-                "body": JSON.stringify(body),
+                "referrer": "https://kick.com/",
                 "method": method,
                 "mode": "cors",
                 "credentials": "include"
@@ -25,45 +27,45 @@ export class NetworkManager{
         if (!hasBearer) {
             delete options.headers["Authorization"];
         }
+        if(body){
+            options.body = JSON.stringify(body);
+        }
        return options;
     }
 
     //basic get
-    static REQUEST(endpoint, option={}){
-        return new Promise((resolve,reject)=>{
-            fetch(API + endpoint, option)
-            .then(res => res.json())
-            .then(res => resolve(res))
-            .catch(err => reject(err));
-        })
+    static REQUEST(endpoint, options={}, dataTag){
+        BROWSER.runtime.sendMessage({type:"request", url:API+endpoint, options, dataTag})
     }
 
     //gets id of user by the given username
-    static getUserId = (username) => {
-        return this.REQUEST(`api/v1/channels/${username}`);
+    static async getUserId(username) {
+        const options = await this.buildOptions(null, "GET");
+        this.REQUEST(`api/v1/channels/${username}`, options, DataTags.USER_DATA);
     }
 
     //gets the id of current logged in user
-    static getCurrentUserId = ()  => {
-        return this.REQUEST("api/v1/user");
+    static async getCurrentUserId(){
+        const options = await this.buildOptions(null, "GET");
+        this.REQUEST("api/v1/user", options, DataTags.CURRENT_USER_DATA);
     }
 
     static async followUser(channel_id){
         const options = await this.buildOptions({channel_id});
-        return this.REQUEST("api/v1/channels/user/subscribe", options);
+        this.REQUEST("api/v1/channels/user/subscribe", options, DataTags.FOLLOW_USER);
     }
     static async unFollowUser(channel_id){
         const options = await this.buildOptions({channel_id});
-        return this.REQUEST("api/v1/channels/user/unsubscribe", options);
+        this.REQUEST("api/v1/channels/user/unsubscribe", options, DataTags.UNFOLLOW_USER);
     }
 
     static async modUser(user_id){
         const options = await this.buildOptions({user_id});
-        return this.REQUEST("channels/add-user", options);
+        this.REQUEST("channels/add-user", options);
     }
     static async unModUser(id){
         const options = await this.buildOptions({id});
-        return this.REQUEST("channels/remove-user", options);
+        this.REQUEST("channels/remove-user", options);
     }
 
     //gets image data as base64 from proxy server

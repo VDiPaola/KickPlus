@@ -13,6 +13,8 @@
         "cookies",
         "contextMenus",
         "storage",
+        "webRequest",
+        "tabs",
         "*://*.kick.com/*",
         "*://*.enzon1k.com/*"
     ],
@@ -28,7 +30,7 @@
     },
 
     "content_scripts": [{
-        "matches":    ["*://*.kick.com/*", "*://*.enzon1k.com/*"],
+        "matches":    ["*://*.kick.com/*"],
         "js":         ["./dist/content-scripts/main.js"]
     },{
         "css": [ "./styles/main.css","./styles/settings.css","./styles/userChatBox.css" ],
