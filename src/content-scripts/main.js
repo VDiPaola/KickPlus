@@ -10,6 +10,7 @@ import { EmoteGrabber } from "./Features/EmoteGrabber";
 import { UserSettings } from "./Features/UserSettings";
 import { ChatFontSize } from "./Features/ChatFontSize";
 import { ChatTimestampFix } from "./Features/ChatTimestampFix";
+import { ReactHider } from "./Features/ReactHider";
 
 
 export class KickPlus{
@@ -52,6 +53,7 @@ export class KickPlus{
         .then((chatContainer)=>{
             UserSettings.init();
             ChatFontSize.init(chatContainer);
+            ReactHider.init(chatContainer);
             //constantly observe for chat messages
             onElementObserved(document.body,"message",(messageContainer)=>{
                 //user chat box when click name

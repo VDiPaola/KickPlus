@@ -47,6 +47,7 @@ export class GlobalSetting {
     static CHAT_USER_BOX = new Setting('CHAT_USER_BOX', true);
     static EMOTE_RESOLVER = new Setting('EMOTE_RESOLVER', true);
     static CHAT_FONT_SIZE = new Setting('CHAT_FONT_SIZE', "default");
+    static REACT_HIDER = new Setting('REACT_HIDER', false);
 
     static Get(keys){
         return new Promise((resolve, reject) => {

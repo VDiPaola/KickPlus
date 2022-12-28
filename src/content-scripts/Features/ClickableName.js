@@ -6,7 +6,7 @@ import { NetworkManager } from "../../classes-shared/networkManager";
 export class ClickableName{
     static handleMessageRecieve(messageContainer){
         //get the username element
-        const usernameEl = messageContainer.querySelector("div .message > div > div > div > span[style]");
+        const usernameEl = messageContainer.querySelector("div .message > div > div > div span[style]");
         //make sure exists
         if (usernameEl) {
             usernameEl.classList.add("chat-username");
@@ -31,3 +31,5 @@ export class ClickableName{
         }
     }
 }
+
+".message > div > div > div:last-child[class]:has(div[class])"

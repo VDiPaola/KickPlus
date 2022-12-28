@@ -2,6 +2,7 @@ import { GlobalSetting } from "../../../classes-shared/Settings";
 import { SettingsTab } from "./UserSettings";
 import {NameTag} from '../Nametag'
 import { ChatFontSize } from "../../Features/ChatFontSize";
+import { ReactHider } from "../../Features/ReactHider";
 
 
 export class GeneralTab{
@@ -16,6 +17,11 @@ export class GeneralTab{
         tab.addCheckBox("Open user box on username click", GlobalSetting.CHAT_USER_BOX);
         //Emote Resolver
         tab.addCheckBox("Emote Resolver", GlobalSetting.EMOTE_RESOLVER);
+        //React Hider
+        tab.addCheckBox("Hide Chat Reacts", GlobalSetting.REACT_HIDER, (isChecked)=>{
+            if(isChecked) {ReactHider.enable()}
+            else ReactHider.disable();
+        });
     }
 }
 

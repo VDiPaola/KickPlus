@@ -67,10 +67,13 @@
   background-color: #e0e0e0 !important;
 }
 
-/* FIX FOR NEW LINES IN PANELS */
 /* FIX FOR EMOTES GOING OVER EMOJI BUTTON */
 .chatroom form div:has(.btn-emoji) > div > div{
   overflow-x: auto !important;
+}
+/* FIX FOR HIGHLIGHTED CHAT MESSAGE GOING OVER EMOJI CONTAINER */
+.emojipicker{
+  z-index: 100 !important;
 }
 /* ALWAYS SHOW CHAT BUTTON */
 .channel .hidden[class*=cursor-pointer]{
@@ -93,6 +96,11 @@ div:has(> img:not([srcset])) > img[sizes='2vw'][class='w-full object-contain']{
 .kp-fontsize .message div:has(> svg){
   width: var(--kp-default-chat-svg-size);
   height: var(--kp-default-chat-svg-size);
+}
+
+/* REACT HIDER */
+.kp-react-hider .message > div > div > div:nth-child(2){
+  display: none !important;
 }
 
 
