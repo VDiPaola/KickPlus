@@ -2,7 +2,7 @@ import { GlobalSetting } from "../../classes-shared/Settings";
 
 export class ReactHider{
     static #chatContainer;
-    static init(chatContainer){
+    static update(chatContainer){
         this.#chatContainer = chatContainer;
         //get setting
         GlobalSetting.REACT_HIDER.Get()

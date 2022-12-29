@@ -11,6 +11,8 @@ import { UserSettings } from "./Features/UserSettings";
 import { ChatFontSize } from "./Features/ChatFontSize";
 import { ChatTimestampFix } from "./Features/ChatTimestampFix";
 import { ReactHider } from "./Features/ReactHider";
+import { Plus18AutoClick } from "./Features/Plus18AutoClick";
+import { ChatRoom } from "./Features/ChatRoom";
 
 
 export class KickPlus{
@@ -47,29 +49,6 @@ export class KickPlus{
         
         
         this.#getStreamerData();
-         
-        //wait for chatroom element
-        waitForElement(document.body,".chat-container .chatroom,.chatroom")
-        .then((chatContainer)=>{
-            UserSettings.init();
-            ChatFontSize.init(chatContainer);
-            ReactHider.init(chatContainer);
-            //constantly observe for chat messages
-            onElementObserved(document.body,"message",(messageContainer)=>{
-                //user chat box when click name
-                try{ClickableName.handleMessageRecieve(messageContainer)}
-                catch(e){console.error("KickPlus: ClickableName.handleMessageRecieve  \n" + e)}
-
-                //resolve emotes
-                if(this.emoteKeys && this.emoteKeys.length > 0){
-                    try{EmoteResolver.resolve(messageContainer)}
-                    catch(e){console.error("KickPlus: EmoteResolver.resolve  \n" + e)}
-                }
-                
-                ChatTimestampFix.handleMessageRecieve(messageContainer);
-            });
-        })
-
     }
 
     static async #getStreamerData(streamerUsername=null){
@@ -78,6 +57,9 @@ export class KickPlus{
             const pathnames = window.location.pathname.split("/").filter(element => element);
             if(window.location.pathname.length > 1 || streamerUsername){
                 if(((pathnames.length == 1 || streamerUsername) || pathnames[1] == "chatroom")){
+                    //features that dont require streamer data
+                    ChatRoom.listen();
+                    Plus18AutoClick.listen();
                     //get streamer data
                     streamerUsername ??= pathnames[0];
                     NetworkManager.getUserId(streamerUsername)

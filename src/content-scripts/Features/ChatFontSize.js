@@ -7,7 +7,7 @@ const defaultImageSize = 1.5;
 const defaultSvgSize = 1.25;
 export class ChatFontSize{
     static chatContainer;
-    static init(chatContainer){
+    static update(chatContainer){
         this.chatContainer = chatContainer;
         GlobalSetting.CHAT_FONT_SIZE.Get()
         .then(value => {

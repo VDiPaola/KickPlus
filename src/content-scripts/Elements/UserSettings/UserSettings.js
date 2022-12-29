@@ -2,7 +2,7 @@ import { elementBuilder, feather, getWindowWidth } from "../../classes/Helpers";
 import settingsIcon from './settingsIcon.svg'
 import { UserSettings } from "../../Features/UserSettings";
 import { Draggable } from "../functionality";
-import { AccessibilityTab, GeneralTab } from "./tabs";
+import { AccessibilityTab, FeaturesTab, GeneralTab } from "./tabs";
 import { Logger } from "../../Features/Logger";
 
 export class SettingsButton{
@@ -60,6 +60,7 @@ export class SettingsWindow extends Draggable{
     }
 
     static #createTabs(){
+        FeaturesTab.create();
         GeneralTab.create();
         AccessibilityTab.create();
     }

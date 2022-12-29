@@ -5,9 +5,9 @@ import { ChatFontSize } from "../../Features/ChatFontSize";
 import { ReactHider } from "../../Features/ReactHider";
 
 
-export class GeneralTab{
+export class FeaturesTab{
     static create(){
-        const tab = new SettingsTab("General");
+        const tab = new SettingsTab("Features");
         //NameTag
         tab.addCheckBox("Username in header", GlobalSetting.HEADER_USERNAME, (isChecked)=>{
             if(isChecked) {NameTag.show()}
@@ -22,6 +22,15 @@ export class GeneralTab{
             if(isChecked) {ReactHider.enable()}
             else ReactHider.disable();
         });
+    }
+}
+
+export class GeneralTab{
+    static create(){
+        const tab = new SettingsTab("General");
+        //18 plus auto click
+        tab.addCheckBox("Auto Click 18+ button", GlobalSetting.PLUS_18_CLICK);
+
     }
 }
 

@@ -6,15 +6,16 @@ export class UserSettings{
     static #settingsContainer=null;
     static #settingsButtonContainer=null;
     static #isWaiting=false;
-    static init(){
+    static update(){
         try{
+            if(this.#isWaiting) return;
             this.#isWaiting = true;
             //wait for container for options button
             waitForElement(document.body, ".chatroom form > div:has(button[type=submit]):last-child")
             .then(settingsContainer => {
                 this.#isWaiting = false;
                 //create settings button element
-                if(!this.#settingsButtonContainer){
+                if(!settingsContainer.contains(this.#settingsButtonContainer)){
                     this.#settingsButtonContainer = SettingsButton.create();
                     this.#settingsButtonContainer.addEventListener("click", (()=>{
                         //show settings
@@ -33,12 +34,6 @@ export class UserSettings{
         }
         catch(e){
             Logger.error("Failed to initialise UserSettings", e);
-        }
-    }
-
-    static update(){
-        if(!this.#isWaiting){
-            this.init();
         }
     }
 
