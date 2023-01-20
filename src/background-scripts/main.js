@@ -1,6 +1,3 @@
-import "./contextMenu/context.js"
-
-
 chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
     if (data.type === "token"){
         chrome.cookies.get({name:"XSRF-TOKEN", url:"https://kick.com"})

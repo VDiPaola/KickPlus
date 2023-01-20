@@ -3,6 +3,7 @@ import { SettingsTab } from "./UserSettings";
 import {NameTag} from '../Nametag'
 import { ChatFontSize } from "../../Features/ChatFontSize";
 import { ReactHider } from "../../Features/ReactHider";
+import { ClickableName } from "../../Features/ClickableName";
 
 
 export class FeaturesTab{
@@ -15,8 +16,6 @@ export class FeaturesTab{
         })
         //User Chat Box
         tab.addCheckBox("Open user box on username click", GlobalSetting.CHAT_USER_BOX);
-        //Emote Resolver
-        tab.addCheckBox("Emote Resolver", GlobalSetting.EMOTE_RESOLVER);
         //React Hider
         tab.addCheckBox("Hide Chat Reacts", GlobalSetting.REACT_HIDER, (isChecked)=>{
             if(isChecked) {ReactHider.enable()}
@@ -28,8 +27,11 @@ export class FeaturesTab{
 export class GeneralTab{
     static create(){
         const tab = new SettingsTab("General");
-        //18 plus auto click
-        tab.addCheckBox("Auto Click 18+ button", GlobalSetting.PLUS_18_CLICK);
+        //enter username for user chat box
+        tab.addTextInput("User Info Box: ", "username", (text)=>{
+            //open user box
+            ClickableName.OpenUserBox(text);
+        })
 
     }
 }

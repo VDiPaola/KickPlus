@@ -11,7 +11,7 @@ export class UserSettings{
             if(this.#isWaiting) return;
             this.#isWaiting = true;
             //wait for container for options button
-            waitForElement(document.body, ".chatroom form > div:has(button[type=submit]):last-child")
+            waitForElement(document.body, ".chatroom form > div:has(button[type=button]):last-child")
             .then(settingsContainer => {
                 this.#isWaiting = false;
                 //create settings button element

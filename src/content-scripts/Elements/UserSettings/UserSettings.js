@@ -129,4 +129,22 @@ export class SettingsTab{
             })
         });
     }
+
+
+    addTextInput(text, placeholder, callback=null, setting=null){
+        //create element
+        const container = elementBuilder("div",{className:"flex items-center"},this.container);
+        elementBuilder("p", {innerText:text}, container);
+        const input = elementBuilder("input",{className:"flex justify-center items-center color-black", type:"text", placeholder},container);
+
+        if(callback){
+            input.addEventListener("keyup", function(e) {
+                e.preventDefault();
+                if (e.key === "Enter") {
+                    callback?.(e.target.value);
+                }
+            });
+        }
+
+    }
 }

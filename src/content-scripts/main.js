@@ -3,22 +3,13 @@ import { waitForElement, onElementObserved,onCustomElementObserved } from "./cla
 import { ChatUserbox } from "./Elements/ChatUserBox";
 import { NetworkManager } from "../classes-shared/networkManager";
 import { TheatreMode } from "./Features/TheatreMode";
-import { EmoteResolver } from "./Features/EmoteResolver";
-import {ClickableName} from './Features/ClickableName';
 import {NameTag} from './Elements/Nametag';
-import { EmoteGrabber } from "./Features/EmoteGrabber";
-import { UserSettings } from "./Features/UserSettings";
-import { ChatFontSize } from "./Features/ChatFontSize";
-import { ChatTimestampFix } from "./Features/ChatTimestampFix";
-import { ReactHider } from "./Features/ReactHider";
-import { Plus18AutoClick } from "./Features/Plus18AutoClick";
 import { ChatRoom } from "./Features/ChatRoom";
 
 
 export class KickPlus{
     static userData=null;
     static streamerData=null;
-    static emoteKeys=null;
 
     static isLoggedIn=false;
     static isStreamer=false;
@@ -45,8 +36,7 @@ export class KickPlus{
         catch(e){console.error("KickPlus: ChatUserbox.init \n" + e)}
         try{TheatreMode.init()}
         catch(e){console.error("KickPlus: TheatreMode.init \n" + e)}
-        EmoteGrabber.init();
-        
+
         
         this.#getStreamerData();
     }
@@ -59,21 +49,16 @@ export class KickPlus{
                 if(((pathnames.length == 1 || streamerUsername) || pathnames[1] == "chatroom")){
                     //features that dont require streamer data
                     ChatRoom.listen();
-                    Plus18AutoClick.listen();
                     //get streamer data
                     streamerUsername ??= pathnames[0];
                     NetworkManager.getUserId(streamerUsername)
                     .then(streamerData => {
                         if(streamerData?.user?.username?.toLowerCase() != streamerUsername.toLowerCase()) return;
-                        //reformat emote list
-                        streamerData.emotes = streamerData.emotes.reduce((obj, item) => (obj[item.name] = item?.image?.full, obj) ,{});
-                        this.emoteKeys = Object.keys(streamerData.emotes);
                         this.streamerData = streamerData;
                         this.isStreamer = streamerUsername == this.userData?.username;
 
                         //update features
                         ChatUserbox.update();
-                        EmoteGrabber.update();
                         
                     })
                     .catch(err => console.error(err));

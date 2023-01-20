@@ -24,9 +24,16 @@ export class TheatreMode{
         //get control bar element
         waitForElement(document.body,".vjs-control-bar")
         .then(controlBar => {
+            if(controlBar == toggleButton.parentNode){
+                //keep observing
+                this.isObserving = false;
+                this.init();
+                return;
+            }
             this.controlBar = controlBar;
-            const nav = document.getElementsByTagName("nav")[0];
-            const sidebar = document.getElementsByClassName("site-sidebar")[0];
+            const nav = document.getElementsByClassName("main-navbar")[0];
+            const sidebar = document.getElementsByClassName("sidebar")[0];
+            if(!nav || !sidebar) return;
             toggleButton.addEventListener("click", (e)=>{
                 if(!isTheatre){
                     //turn on theatre mode

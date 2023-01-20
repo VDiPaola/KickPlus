@@ -1,9 +1,7 @@
 import { onElementObserved, waitForElement } from "../classes/Helpers";
 import { KickPlus } from "../main";
 import { ChatFontSize } from "./ChatFontSize";
-import { ChatTimestampFix } from "./ChatTimestampFix";
 import { ClickableName } from "./ClickableName";
-import { EmoteResolver } from "./EmoteResolver";
 import { ReactHider } from "./ReactHider";
 import { UserSettings } from "./UserSettings";
 
@@ -21,6 +19,7 @@ export class ChatRoom{
             ReactHider.update(chatContainer);
             UserSettings.update();
             ChatFontSize.update(chatContainer);
+            ClickableName.update(chatContainer);
 
             //observer can only be on once
             if(this.#isObserving) return;
@@ -34,13 +33,6 @@ export class ChatRoom{
         //user chat box when click name
         try{ClickableName.handleMessageRecieve(messageContainer)}
         catch(e){console.error("KickPlus: ClickableName.handleMessageRecieve  \n" + e)}
-
-        //resolve emotes
-        if(KickPlus.emoteKeys && KickPlus.emoteKeys.length > 0){
-            try{EmoteResolver.resolve(messageContainer)}
-            catch(e){console.error("KickPlus: EmoteResolver.resolve  \n" + e)}
-        }
-        
-        ChatTimestampFix.handleMessageRecieve(messageContainer);
+    
     }
 }

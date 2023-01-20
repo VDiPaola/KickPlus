@@ -67,23 +67,6 @@
   background-color: #e0e0e0 !important;
 }
 
-/* FIX FOR EMOTES GOING OVER EMOJI BUTTON */
-.chatroom form div:has(.btn-emoji) > div > div{
-  overflow-x: auto !important;
-}
-/* FIX FOR HIGHLIGHTED CHAT MESSAGE GOING OVER EMOJI CONTAINER */
-.emojipicker{
-  z-index: 100 !important;
-}
-/* ALWAYS SHOW CHAT BUTTON */
-.channel .hidden[class*=cursor-pointer]{
-  visibility: visible !important;
-}
-/* FIX FOR EMOTES SHOWING IMAGE IN BG */
-div:has(> img:not([srcset])) > img[sizes='2vw'][class='w-full object-contain']{
-  display: none;
-}
-
 /* CHAT SIZING  */
 .kp-fontsize .message div:has(> span){
   font-size: var(--kp-default-chat-font-size);

@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Kick Plus",
-    "version": "1.7.5",
+    "version": "1.8.4",
     "description": "improvements to kick.com",
     "icons":{
         "128": "icon.png",
@@ -11,7 +11,6 @@
 
     "permissions": [
         "cookies",
-        "contextMenus",
         "storage"
     ],
 
